@@ -3,7 +3,7 @@
   "download": {
     "path": "/Users/deadcoast/Downloads/VideoMilker",
     "create_day_folders": true,
-    "file_naming": "%(upload_date)s_%(title)s",
+    "file_naming": "%(upload_date)s_%(title)s.%(ext)s",
     "default_quality": "best",
     "default_format": "mp4",
     "max_concurrent": 3,
