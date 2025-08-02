@@ -1,0 +1,24 @@
+{
+  "version": "1.0.0",
+  "download": {
+    "path": "/Users/deadcoast/Downloads/VideoMilker",
+    "create_day_folders": true,
+    "file_naming": "%(upload_date)s_%(title)s",
+    "default_quality": "best",
+    "default_format": "mp4",
+    "max_concurrent": 3,
+    "auto_subtitle": false,
+    "save_thumbnail": false
+  },
+  "ui": {
+    "theme": "default",
+    "show_progress_details": true,
+    "confirm_before_quit": true,
+    "clear_screen": true
+  },
+  "history": {
+    "max_entries": 1000,
+    "auto_cleanup": true,
+    "cleanup_days": 30
+  }
+}
