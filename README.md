@@ -25,27 +25,27 @@ VideoMilker transforms the complex yt-dlp experience into user-friendly workflow
 ### File Organization
 
 - **Day-based Folders**: Automatic organization by date (DD format)
-- **Smart Naming**: Configurable file naming templates
+- **Smart Naming**: Configurable file naming templates with `%(ext)s` extension support
 - **Batch Logs**: Detailed logging of batch operations
 - **Duplicate Prevention**: Unique filename generation
 
 ### Configuration Management
 
-- **Persistent Settings**: JSON-based configuration storage
+- **Persistent Settings**: JSON-based configuration storage using [Pydantic models](src/videomilker/config/settings.py)
 - **Theme Support**: Multiple UI themes (default, dark, light, minimal)
 - **Migration Support**: Automatic configuration version migration
 - **Backup System**: Automatic configuration backups
 
 ### History & Analytics
 
-- **Download History**: SQLite-based download tracking
+- **Download History**: SQLite-based download tracking via [HistoryManager](src/videomilker/history/history_manager.py)
 - **Statistics**: Comprehensive download analytics
 - **Search & Filter**: Advanced history search capabilities
 - **Export Options**: History export in JSON/CSV formats
 
 ### Advanced Features
 
-- **yt-dlp Integration**: Full yt-dlp feature support
+- **yt-dlp Integration**: Full yt-dlp feature support via [VideoDownloader](src/videomilker/core/downloader.py)
 - **Format Presets**: Predefined quality and format options
 - **Post-processing**: Audio extraction, metadata embedding
 - **SponsorBlock**: Sponsor segment handling
@@ -73,7 +73,7 @@ cd milkvideo
 Run the global installation script:
 
 ```bash
-./scripts/install_global.sh
+./install_global.sh
 ```
 
 This will:
@@ -105,7 +105,7 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
-1. Install the package in development mode:
+Install the package in development mode:
 
 ```bash
 pip install -e .
@@ -118,7 +118,7 @@ pip install -e .
 Launch the interactive CLI:
 
 ```bash
-vmx
+python -m videomilker
 ```
 
 ### Quick Download
@@ -126,9 +126,9 @@ vmx
 Download a single URL directly:
 
 ```bash
-vmx --link "https://youtube.com/watch?v=example"
+python -m videomilker --link "https://youtube.com/watch?v=example"
 # or
-vmx -l "https://youtube.com/watch?v=example"
+python -m videomilker -l "https://youtube.com/watch?v=example"
 ```
 
 ### Custom Configuration
@@ -136,7 +136,7 @@ vmx -l "https://youtube.com/watch?v=example"
 Use a custom configuration file:
 
 ```bash
-vmx -c /path/to/config.json
+python -m videomilker -c /path/to/config.json
 ```
 
 ### Set Download Path
@@ -144,19 +144,21 @@ vmx -c /path/to/config.json
 Override download path:
 
 ```bash
-vmx -d /path/to/downloads
+python -m videomilker -d /path/to/downloads
 ```
 
 ### Help and Version
 
 ```bash
-vmx --help      # Show help
-vmx --version   # Show version
+python -m videomilker --help      # Show help
+python -m videomilker --version   # Show version
 ```
 
 ## Menu System
 
 ### Main Menu
+
+The main menu is rendered by [MenuRenderer](src/videomilker/cli/menu_renderer.py) and controlled by [MenuSystem](src/videomilker/cli/menu_system.py):
 
 ```plaintext
 VideoMilker v1.0
@@ -176,16 +178,16 @@ VideoMilker v1.0
 
 ### Single URL Download
 
-- Enter video URL
+- Enter video URL (validated by [InputHandler](src/videomilker/cli/input_handler.py))
 - Preview video information
 - Confirm download
-- Real-time progress tracking
+- Real-time progress tracking via [ProgressTracker](src/videomilker/core/progress_tracker.py)
 
 ### Batch URL Download
 
 - Direct URL input
 - Load from batch file
-- Progress tracking for multiple downloads
+- Progress tracking for multiple downloads via [BatchProcessor](src/videomilker/core/batch_processor.py)
 - Comprehensive error handling
 
 ### Options & Settings Menu
@@ -194,7 +196,7 @@ VideoMilker v1.0
 - Format and quality settings
 - File organization options
 - Advanced yt-dlp options
-- Configuration management
+- Configuration management via [ConfigManager](src/videomilker/config/config_manager.py)
 
 ### Download History Menu
 
@@ -203,11 +205,11 @@ VideoMilker v1.0
 - Export download data
 - Clear history
 
-## Configuration Menu
+## Configuration
 
 ### Default Configuration
 
-Configuration is stored in `~/.config/videomilker/videomilker.json`:
+Configuration is stored in `~/.config/videomilker/videomilker.json` and managed by [ConfigManager](src/videomilker/config/config_manager.py):
 
 ```json
 {
@@ -215,7 +217,7 @@ Configuration is stored in `~/.config/videomilker/videomilker.json`:
   "download": {
     "path": "~/Downloads/VideoMilker",
     "create_day_folders": true,
-    "file_naming": "%(upload_date)s_%(title)s",
+    "file_naming": "%(upload_date)s_%(title)s.%(ext)s",
     "default_quality": "best",
     "default_format": "mp4",
     "max_concurrent": 3
@@ -235,14 +237,18 @@ Configuration is stored in `~/.config/videomilker/videomilker.json`:
 
 ### Themes
 
+UI themes are defined in [styles.py](src/videomilker/cli/styles.py):
+
 - **default**: Blue borders, yellow highlights
 - **dark**: Bright colors for dark terminals
 - **light**: Black borders for light terminals
 - **minimal**: Minimal styling
 
-## File Organization Menu
+## Structure and Organization
 
 ### Directory Structure
+
+Files are organized by [FileManager](src/videomilker/core/file_manager.py):
 
 ```plaintext
 Downloads/
@@ -250,10 +256,10 @@ Downloads/
     ├── 01/  # January 1st downloads
     ├── 02/  # January 2nd downloads
     ├── 15/  # January 15th downloads (current day)
-    │   ├── YYYY-MM-DD_video-title-1.mp4
-    │   ├── YYYY-MM-DD_video-title-2.mp4
+    │   ├── 20241215_video-title-1.mp4
+    │   ├── 20241215_video-title-2.mp4
     │   └── batch_downloads/
-    │       └── YYYY-MM-DD_HH-MM_batch.log
+    │       └── 20241215_14-30_batch.log
     └── config/
         ├── videomilker.json
         ├── batch_files/
@@ -274,11 +280,26 @@ Downloads/
 milkvideo/
 ├── src/videomilker/
 │   ├── cli/              # CLI interface components
+│   │   ├── menu_system.py      # Main menu controller
+│   │   ├── menu_renderer.py    # Rich UI rendering
+│   │   ├── input_handler.py    # User input processing
+│   │   └── styles.py           # UI themes and styling
 │   ├── core/             # Core functionality
+│   │   ├── downloader.py       # Main download management
+│   │   ├── batch_processor.py  # Batch download logic
+│   │   ├── progress_tracker.py # Progress monitoring
+│   │   └── file_manager.py     # File operations
 │   ├── config/           # Configuration management
+│   │   ├── settings.py         # Pydantic settings models
+│   │   ├── config_manager.py   # Config file operations
+│   │   └── defaults.py         # Default configurations
 │   ├── history/          # Download history
+│   │   └── history_manager.py  # History operations
 │   ├── utils/            # Utility functions
 │   └── exceptions/       # Custom exceptions
+│       ├── download_errors.py  # Download-related errors
+│       ├── config_errors.py    # Configuration errors
+│       └── validation_errors.py # Validation errors
 ├── tests/                # Test suite
 ├── docs/                 # Documentation
 └── requirements.txt      # Dependencies
@@ -287,7 +308,14 @@ milkvideo/
 ### Running Tests
 
 ```bash
-python test_videomilker.py
+# Run all tests
+pytest
+
+# Run with coverage
+pytest --cov=src/videomilker
+
+# Run specific test file
+pytest tests/test_videomilker.py
 ```
 
 ### Code Quality
@@ -303,18 +331,37 @@ flake8 src/
 pytest --cov=src/
 ```
 
+## Documentation
+
+Comprehensive documentation is available in the [docs/](docs/) directory:
+
+- **[Installation Guide](docs/installation.md)** - Setup and installation instructions
+- **[User Guide](docs/user-guide.md)** - Complete user manual with examples
+- **[API Reference](docs/api-reference.md)** - Developer API documentation
+- **[Directory Structure](docs/directory-structure.md)** - Project structure overview
+- **[Project Architecture](docs/project-architecture.md)** - Design and architecture
+- **[TODO](docs/TODO.md)** - Development tasks and improvements
+
 ## Contributing
 
 1. Fork the repository
 2. Create a feature branch
-3. Make your changes
+3. Make your changes following the [code style guidelines](docs/TODO.md#development-guidelines)
 4. Add tests for new functionality
 5. Ensure all tests pass
 6. Submit a pull request
 
+### Development Guidelines
+
+- Follow Black code formatting
+- Use type hints throughout
+- Write comprehensive docstrings
+- Add tests for new features
+- Follow the established project structure
+
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
@@ -358,21 +405,34 @@ sudo apt install ffmpeg
 chmod +x src/videomilker/main.py
 ```
 
+**Files Downloaded Without Extensions**: This issue has been fixed. Ensure your configuration includes the `%(ext)s` placeholder:
+
+```json
+{
+  "download": {
+    "file_naming": "%(upload_date)s_%(title)s.%(ext)s"
+  }
+}
+```
+
 ### Getting Help
 
 - Check the configuration file for errors
-- Enable verbose logging: `python -m src.videomilker.main -v`
+- Enable verbose logging: `python -m videomilker --verbose`
 - Review the download history for failed downloads
 - Check the batch logs for detailed error information
+- Consult the [User Guide](docs/user-guide.md#troubleshooting) for common solutions
 
 ## Roadmap
 
-- [ ] GUI version using Tkinter/PyQt
+- [ ] Enhanced batch processing with pause/resume functionality
+- [ ] Additional UI themes and customization options
+- [ ] Advanced format selection interface
+- [ ] Plugin system for extensibility
 - [ ] Web interface
-- [ ] Plugin system
-- [ ] Advanced format selection
-- [ ] Download scheduling
+- [ ] Advanced post-processing options
+- [ ] Integration with external media libraries
 - [ ] Cloud storage integration
 - [ ] Mobile app companion
 
----
+For detailed development plans, see the [TODO](docs/TODO.md) document.
