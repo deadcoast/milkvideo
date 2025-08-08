@@ -542,7 +542,7 @@ except NetworkError as e:
 ```python
 from src.remove_emojis import remove_emojis
 
-clean_title = remove_emojis("Video Title 🎵🎬")
+clean_title = remove_emojis("Video Title ")
 # Result: "Video Title "
 ```
 

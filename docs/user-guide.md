@@ -93,22 +93,22 @@ When you start VideoMilker, you'll see the main menu:
 
 ```bash
 VideoMilker v1.0
-┌─────────────────────────────────────────┐
-│           Welcome to VideoMilker!       │
-│─────────────────────────────────────────│
-│                                         │
-│  [1] Quick Download                     │
-│  [2] Batch Download                     │
-│  [3] Queue Management                   │
-│  [4] Audio Download (Ctrl+A)            │
-│  [5] Chapter Download (Ctrl+C)          │
-│  [6] Options & Settings                 │
-│  [7] Download History                   │
-│  [8] File Management (Ctrl+F)           │
-│  [9] Help & Info                        │
-│                                         │
-│  [q] Quit Application                   │
-└─────────────────────────────────────────┘
+
+           Welcome to VideoMilker!       
+
+                                         
+  [1] Quick Download                     
+  [2] Batch Download                     
+  [3] Queue Management                   
+  [4] Audio Download (Ctrl+A)            
+  [5] Chapter Download (Ctrl+C)          
+  [6] Options & Settings                 
+  [7] Download History                   
+  [8] File Management (Ctrl+F)           
+  [9] Help & Info                        
+                                         
+  [q] Quit Application                   
+
 
 Global Shortcuts:
 • Ctrl+Q: Quick Download
@@ -228,17 +228,17 @@ VideoMilker automatically organizes downloads:
 
 ```plaintext
 Downloads/
-└── VideoMilker/
-    ├── 01/  # January 1st downloads
-    ├── 02/  # January 2nd downloads
-    ├── 15/  # January 15th downloads (current day)
-    │   ├── 20241215_video-title-1.mp4
-    │   ├── 20241215_video-title-2.mp4
-    │   └── batch_downloads/
-    │       └── 20241215_14-30_batch.log
-    └── config/
-        ├── videomilker.json
-        └── download_history.json
+ VideoMilker/
+     01/  # January 1st downloads
+     02/  # January 2nd downloads
+     15/  # January 15th downloads (current day)
+        20241215_video-title-1.mp4
+        20241215_video-title-2.mp4
+        batch_downloads/
+            20241215_14-30_batch.log
+     config/
+         videomilker.json
+         download_history.json
 ```
 
 ### File Naming
@@ -261,15 +261,15 @@ Real-time progress display:
 
 ```bash
 Downloading: Video Title Here
-┌─────────────────────────────────────────┐
-│  Progress: ████████████░░░░░░░  67%     │
-│  Speed: 2.4 MB/s    ETA: 00:45          │
-│  Size: 15.3 MB / 22.8 MB                │
-│                                         │
-│  Status: Downloading video stream...    │
-│                                         │
-│  [Ctrl+C] Cancel Download               │
-└─────────────────────────────────────────┘
+
+  Progress:   67%     
+  Speed: 2.4 MB/s    ETA: 00:45          
+  Size: 15.3 MB / 22.8 MB                
+                                         
+  Status: Downloading video stream...    
+                                         
+  [Ctrl+C] Cancel Download               
+
 ```
 
 ### Batch Processing
@@ -278,17 +278,17 @@ Monitor multiple downloads:
 
 ```bash
 Batch Download Progress
-┌─────────────────────────────────────────┐
-│  Overall: ██████░░░░░░░░░░░░░░░  3/8    │
-│                                         │
-│  Video 1 - Complete (25.3 MB)           │
-│  Video 2 - Complete (18.7 MB)           │
-│  Video 3 - Downloading... 45%           │
-│  Video 4 - Queued                       │
-│  Video 5 - Queued                       │
-│                                         │
-│  [p] Pause  [s] Skip Current  [q] Quit  │
-└─────────────────────────────────────────┘
+
+  Overall:   3/8    
+                                         
+  Video 1 - Complete (25.3 MB)           
+  Video 2 - Complete (18.7 MB)           
+  Video 3 - Downloading... 45%           
+  Video 4 - Queued                       
+  Video 5 - Queued                       
+                                         
+  [p] Pause  [s] Skip Current  [q] Quit  
+
 ```
 
 ## Configuration

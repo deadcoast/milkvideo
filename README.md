@@ -17,7 +17,11 @@ VideoMilker transforms the complex yt-dlp experience into user-friendly workflow
 ### Core Functionality
 
 - **Quick Download**: Single video downloads with preview and confirmation
+- **Audio-Only Download**: Extract audio from videos
+- **Chapter Split Download**: Download videos with chapter separation
 - **Batch Download**: Multiple URL processing with progress tracking
+- **Resume Interrupted Downloads**: Continue failed or interrupted downloads
+- **File Management**: Organize and manage downloaded files
 - **Format Selection**: Intelligent format and quality selection
 - **Progress Tracking**: Real-time download progress with speed and ETA
 - **Error Handling**: Comprehensive error handling with user guidance
@@ -51,165 +55,325 @@ VideoMilker transforms the complex yt-dlp experience into user-friendly workflow
 - **SponsorBlock**: Sponsor segment handling
 - **Proxy Support**: Network proxy configuration
 
-## Installation
+## Quick Start Guide
 
-### Prerequisites
+### 1. Installation
+
+#### Prerequisites
 
 - Python 3.8+
-- yt-dlp
 - FFmpeg (for audio/video processing)
+- curl (for network operations)
 
-### Setup
+#### Easy Installation
 
-#### Option 1: Global Installation (Recommended)
-
-Clone the repository:
+Clone the repository and run the installation script:
 
 ```bash
 git clone https://github.com/deadcoast/milkvideo.git
 cd milkvideo
-```
-
-Run the global installation script:
-
-```bash
-./install_global.sh
+bash install.sh
 ```
 
 This will:
 
-- Create a virtual environment
-- Install all dependencies
-- Make `vmx` available globally
-- You can then use `vmx` from anywhere in your terminal
+- ✅ Check system dependencies (Python, FFmpeg, curl)
+- ✅ Create a virtual environment
+- ✅ Install all dependencies with correct architecture
+- ✅ Install the `vmx` command globally
+- ✅ Verify the installation
 
-#### Option 2: Manual Installation
+#### Manual Installation
 
-Clone the repository:
+If you prefer manual installation:
 
 ```bash
 git clone https://github.com/deadcoast/milkvideo.git
 cd milkvideo
-```
-
-Create and activate virtual environment:
-
-```bash
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-```
-
-Install dependencies:
-
-```bash
 pip install -r requirements.txt
+pip install -e .
 ```
 
-Install the package in development mode:
+### 2. First Run
+
+Launch VideoMilker:
 
 ```bash
+vmx
+```
+
+You'll see the main menu with options for different download types.
+
+### 3. Quick Download
+
+For a single video download:
+
+```bash
+vmx --link "https://youtube.com/watch?v=example"
+# or
+vmx -l "https://youtube.com/watch?v=example"
+```
+
+### 4. Interactive Menu
+
+Use the interactive menu for full functionality:
+
+```bash
+vmx
+```
+
+Navigate using:
+
+- **Number keys** (1-9) to select options
+- **Arrow keys** to navigate
+- **Enter** to confirm
+- **q** to quit
+- **?** for keyboard shortcuts
+- **0** to go back
+
+## Installation
+
+### Dependencies
+
+- **Python 3.8+**: Required for the application
+- **FFmpeg**: For audio/video processing (warning if not found)
+- **curl**: For network operations (required)
+
+### Automated Installation
+
+The `install.sh` script provides an automated installation:
+
+```bash
+git clone https://github.com/deadcoast/milkvideo.git
+cd milkvideo
+bash install.sh
+```
+
+#### What the installer does
+
+1. **System Checks**: Verifies Python version, FFmpeg, and curl
+2. **Virtual Environment**: Creates and activates a Python virtual environment
+3. **Dependencies**: Installs all required packages with architecture compatibility
+4. **Package Installation**: Installs VideoMilker in development mode
+5. **Global Command**: Creates the `vmx` command available system-wide
+6. **Verification**: Tests the installation
+
+#### Installation Output
+
+The installer provides detailed feedback:
+
+```bash
+🎬 VideoMilker Installation
+===========================
+📁 Installing from: /path/to/milkvideo
+✅ Python 3.12 found
+✅ pip3 found
+ℹ️ Checking system dependencies...
+✅ ffmpeg found
+✅ curl found
+✅ Virtual environment already exists
+ℹ️ Activating virtual environment...
+✅ Virtual environment activated
+ℹ️ Installing dependencies...
+✅ Dependencies installed successfully
+ℹ️ Installing VideoMilker...
+✅ VideoMilker package installed
+ℹ️ Creating wrapper script...
+ℹ️ Installing vmx command...
+✅ vmx installed globally at /usr/local/bin/vmx
+ℹ️ Verifying installation...
+✅ vmx command verified
+
+🎉 Installation Complete!
+========================
+
+You can now use VideoMilker with these commands:
+  vmx                    - Open the main menu
+  vmx --link <URL>       - Quick download
+  vmx --help             - Show help
+  vmx --version          - Show version
+```
+
+### Custom Installation
+
+For advanced users or custom setups:
+
+```bash
+# Clone repository
+git clone https://github.com/deadcoast/milkvideo.git
+cd milkvideo
+
+# Create virtual environment
+python3 -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+# Install dependencies
+pip install --upgrade pip
+pip install -r requirements.txt
+
+# Install package
 pip install -e .
+
+# Create wrapper script (optional)
+echo '#!/bin/bash
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/.venv/bin/activate"
+python -m videomilker.main "$@"' > vmx
+chmod +x vmx
+
+# Install globally (optional)
+sudo cp vmx /usr/local/bin/vmx
 ```
 
 ## Usage
 
-### Interactive Mode
+### Command Line Interface
+
+#### Interactive Mode
 
 Launch the interactive CLI:
 
 ```bash
-python -m videomilker
+vmx
 ```
 
-### Quick Download
+#### Quick Download
 
 Download a single URL directly:
 
 ```bash
-python -m videomilker --link "https://youtube.com/watch?v=example"
+vmx --link "https://youtube.com/watch?v=example"
 # or
-python -m videomilker -l "https://youtube.com/watch?v=example"
+vmx -l "https://youtube.com/watch?v=example"
 ```
 
-### Custom Configuration
+#### Custom Configuration
 
 Use a custom configuration file:
 
 ```bash
-python -m videomilker -c /path/to/config.json
+vmx -c /path/to/config.json
 ```
 
-### Set Download Path
+#### Set Download Path
 
 Override download path:
 
 ```bash
-python -m videomilker -d /path/to/downloads
+vmx -d /path/to/downloads
 ```
 
-### Help and Version
+#### Help and Version
 
 ```bash
-python -m videomilker --help      # Show help
-python -m videomilker --version   # Show version
+vmx --help      # Show help
+vmx --version   # Show version
 ```
 
-## Menu System
+### Menu System
 
-### Main Menu
+#### Main Menu
 
-The main menu is rendered by [MenuRenderer](src/videomilker/cli/menu_renderer.py) and controlled by [MenuSystem](src/videomilker/cli/menu_system.py):
+The main menu provides access to all features:
 
 ```plaintext
-VideoMilker v1.0
-┌─────────────────────────────────────────┐
-│           Welcome to VideoMilker!       │
-│─────────────────────────────────────────│
-│                                         │
-│  [1] Quick Download                     │
-│  [2] Batch Download                     │
-│  [3] Options & Settings                 │
-│  [4] Download History                   │
-│  [5] Help & Info                        │
-│                                         │
-│  [q] Quit Application                   │
-└─────────────────────────────────────────┘
+╭──────────────────── VideoMilker Main Menu ─────────────────────╮
+│ 1 -  Quick Download                                            │
+│ 2 -  Audio-Only Download                                       │
+│ 3 -  Chapter Split Download                                    │
+│ 4 -  Batch Download                                            │
+│ 5 -  Resume Interrupted Downloads                              │
+│ 6 -  File Management                                           │
+│ 7 -  Options & Settings                                        │
+│ 8 -  Download History                                          │
+│ 9 -  Help & Info                                               │
+│ q - Quit Application                                           │
+│ 0 - ← Back                                                     │
+│ Press ? for keyboard shortcuts                                 │
+╰────────────────────────────────────────────────────────────────╯
 ```
 
-### Single URL Download
+#### Keyboard Shortcuts
 
-- Enter video URL (validated by [InputHandler](src/videomilker/cli/input_handler.py))
-- Preview video information
-- Confirm download
-- Real-time progress tracking via [ProgressTracker](src/videomilker/core/progress_tracker.py)
+Press `?` to see all available keyboard shortcuts:
 
-### Batch URL Download
+- **Global Navigation**: `q` (quit), `0` (back), `?` (help)
+- **Direct Menu Access**: `1-9` (menu options)
+- **General Navigation**: Arrow keys, Enter, Tab
+- **Input & Editing**: Ctrl+C (cancel), Ctrl+U (clear line)
+- **Download Controls**: Space (pause/resume), Ctrl+C (cancel)
+- **File Management**: Various shortcuts for file operations
+- **History & Search**: Search and filter shortcuts
+- **Configuration**: Settings management shortcuts
 
-- Direct URL input
-- Load from batch file
-- Progress tracking for multiple downloads via [BatchProcessor](src/videomilker/core/batch_processor.py)
-- Comprehensive error handling
+### Download Types
 
-### Options & Settings Menu
+#### 1. Quick Download
 
-- Download path configuration
-- Format and quality settings
-- File organization options
-- Advanced yt-dlp options
-- Configuration management via [ConfigManager](src/videomilker/config/config_manager.py)
+- Single video download with preview
+- Format and quality selection
+- Real-time progress tracking
 
-### Download History Menu
+#### 2. Audio-Only Download
 
-- View recent downloads
-- Search and filter history
-- Export download data
-- Clear history
+- Extract audio from videos
+- Multiple audio format options
+- Quality selection
+
+#### 3. Chapter Split Download
+
+- Download videos with chapter separation
+- Individual chapter files
+- Metadata preservation
+
+#### 4. Batch Download
+
+- Multiple URL processing
+- File loading options (browse, path, recent, templates)
+- Queue management with analytics
+- Progress tracking for all downloads
+
+#### 5. Resume Interrupted Downloads
+
+- Continue failed downloads
+- Resume from last successful point
+- Error recovery
+
+#### 6. File Management
+
+- Organize downloaded files
+- Duplicate detection
+- Storage analysis
+- Cleanup utilities
+
+### Options & Settings
+
+Access comprehensive settings:
+
+- **Download Path**: Configure default download location
+- **Format Settings**: Video/audio format preferences
+- **File Organization**: Naming templates and folder structure
+- **Performance**: Concurrent download limits
+- **Advanced yt-dlp Options**: Custom yt-dlp parameters
+- **Configuration Management**: Import/export settings
+
+### Download History
+
+Manage your download history:
+
+- **Recent Downloads**: View latest downloads
+- **Search & Filter**: Find specific downloads
+- **Statistics**: Download analytics and metrics
+- **Export Options**: Export history in various formats
+- **Clear History**: Remove old or failed downloads
 
 ## Configuration
 
 ### Default Configuration
 
-Configuration is stored in `~/.config/videomilker/videomilker.json` and managed by [ConfigManager](src/videomilker/config/config_manager.py):
+Configuration is stored in `~/.config/videomilker/videomilker.json`:
 
 ```json
 {
@@ -225,7 +389,8 @@ Configuration is stored in `~/.config/videomilker/videomilker.json` and managed 
   "ui": {
     "theme": "default",
     "show_progress_details": true,
-    "confirm_before_quit": true
+    "confirm_before_quit": true,
+    "clear_screen": true
   },
   "history": {
     "max_entries": 1000,
@@ -237,7 +402,7 @@ Configuration is stored in `~/.config/videomilker/videomilker.json` and managed 
 
 ### Themes
 
-UI themes are defined in [styles.py](src/videomilker/cli/styles.py):
+Available UI themes:
 
 - **default**: Blue borders, yellow highlights
 - **dark**: Bright colors for dark terminals
@@ -248,22 +413,22 @@ UI themes are defined in [styles.py](src/videomilker/cli/styles.py):
 
 ### Directory Structure
 
-Files are organized by [FileManager](src/videomilker/core/file_manager.py):
+Files are organized automatically:
 
 ```plaintext
 Downloads/
-└── VideoMilker/
-    ├── 01/  # January 1st downloads
-    ├── 02/  # January 2nd downloads
-    ├── 15/  # January 15th downloads (current day)
-    │   ├── 20241215_video-title-1.mp4
-    │   ├── 20241215_video-title-2.mp4
-    │   └── batch_downloads/
-    │       └── 20241215_14-30_batch.log
-    └── config/
-        ├── videomilker.json
-        ├── batch_files/
-        └── download_history.json
+ VideoMilker/
+     01/  # January 1st downloads
+     02/  # January 2nd downloads
+     15/  # January 15th downloads (current day)
+        20241215_video-title-1.mp4
+        20241215_video-title-2.mp4
+        batch_downloads/
+            20241215_14-30_batch.log
+     config/
+         videomilker.json
+         batch_files/
+         download_history.json
 ```
 
 ### File Naming
@@ -278,31 +443,31 @@ Downloads/
 
 ```plaintext
 milkvideo/
-├── src/videomilker/
-│   ├── cli/              # CLI interface components
-│   │   ├── menu_system.py      # Main menu controller
-│   │   ├── menu_renderer.py    # Rich UI rendering
-│   │   ├── input_handler.py    # User input processing
-│   │   └── styles.py           # UI themes and styling
-│   ├── core/             # Core functionality
-│   │   ├── downloader.py       # Main download management
-│   │   ├── batch_processor.py  # Batch download logic
-│   │   ├── progress_tracker.py # Progress monitoring
-│   │   └── file_manager.py     # File operations
-│   ├── config/           # Configuration management
-│   │   ├── settings.py         # Pydantic settings models
-│   │   ├── config_manager.py   # Config file operations
-│   │   └── defaults.py         # Default configurations
-│   ├── history/          # Download history
-│   │   └── history_manager.py  # History operations
-│   ├── utils/            # Utility functions
-│   └── exceptions/       # Custom exceptions
-│       ├── download_errors.py  # Download-related errors
-│       ├── config_errors.py    # Configuration errors
-│       └── validation_errors.py # Validation errors
-├── tests/                # Test suite
-├── docs/                 # Documentation
-└── requirements.txt      # Dependencies
+ src/videomilker/
+    cli/              # CLI interface components
+       menu_system.py      # Main menu controller
+       menu_renderer.py    # Rich UI rendering
+       input_handler.py    # User input processing
+       styles.py           # UI themes and styling
+    core/             # Core functionality
+       downloader.py       # Main download management
+       batch_processor.py  # Batch download logic
+       progress_tracker.py # Progress monitoring
+       file_manager.py     # File operations
+    config/           # Configuration management
+       settings.py         # Pydantic settings models
+       config_manager.py   # Config file operations
+       defaults.py         # Default configurations
+    history/          # Download history
+       history_manager.py  # History operations
+    utils/            # Utility functions
+    exceptions/       # Custom exceptions
+        download_errors.py  # Download-related errors
+        config_errors.py    # Configuration errors
+        validation_errors.py # Validation errors
+ tests/                # Test suite
+ docs/                 # Documentation
+ requirements.txt      # Dependencies
 ```
 
 ### Running Tests
@@ -374,6 +539,30 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ### Common Issues
 
+#### Installation Issues
+
+**Architecture Compatibility**: If you encounter `pydantic_core` architecture errors:
+
+```bash
+# Remove corrupted virtual environment
+rm -rf .venv
+
+# Recreate with correct architecture
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+pip install -e .
+```
+
+**Permission Errors**: Check file permissions:
+
+```bash
+chmod +x install.sh
+chmod +x vmx
+```
+
+#### Runtime Issues
+
 **Import Errors**: Ensure you're using the virtual environment:
 
 ```bash
@@ -399,13 +588,7 @@ sudo apt install ffmpeg
 # Download from https://ffmpeg.org/download.html
 ```
 
-**Permission Errors**: Check file permissions and paths:
-
-```bash
-chmod +x src/videomilker/main.py
-```
-
-**Files Downloaded Without Extensions**: This issue has been fixed. Ensure your configuration includes the `%(ext)s` placeholder:
+**Files Downloaded Without Extensions**: Ensure your configuration includes the `%(ext)s` placeholder:
 
 ```json
 {
@@ -415,10 +598,24 @@ chmod +x src/videomilker/main.py
 }
 ```
 
+#### Menu Navigation Issues
+
+**`?` Key Not Working**: The `?` key should show keyboard shortcuts. If it doesn't work:
+
+1. Ensure you're in the main menu
+2. Press `?` directly (not as part of another input)
+3. Check that the menu system is properly initialized
+
+**Clear History Not Working**: The clear history functionality has been fixed. If issues persist:
+
+1. Check that the database file exists: `~/.config/videomilker/download_history.db`
+2. Ensure proper permissions on the config directory
+3. Try clearing specific types (all, old, failed) from the history menu
+
 ### Getting Help
 
 - Check the configuration file for errors
-- Enable verbose logging: `python -m videomilker --verbose`
+- Enable verbose logging: `vmx --verbose`
 - Review the download history for failed downloads
 - Check the batch logs for detailed error information
 - Consult the [User Guide](docs/user-guide.md#troubleshooting) for common solutions

@@ -39,9 +39,9 @@ def test_batch_functionality():
     template_path = batch_folder / "test_template.txt"
     try:
         batch_processor.create_batch_template(template_path)
-        print(f"✓ Template created: {template_path}")
+        print(f" Template created: {template_path}")
     except Exception as e:
-        print(f"✗ Failed to create template: {e}")
+        print(f" Failed to create template: {e}")
     
     # Test 3: Load URLs from sample file
     print("\n3. Testing URL loading from sample file:")
@@ -49,27 +49,27 @@ def test_batch_functionality():
     if sample_file.exists():
         try:
             urls = batch_processor.load_urls_from_file(sample_file)
-            print(f"✓ Loaded {len(urls)} URLs from sample file")
+            print(f" Loaded {len(urls)} URLs from sample file")
             for i, url in enumerate(urls[:3]):  # Show first 3
                 print(f"  {i+1}. {url}")
             if len(urls) > 3:
                 print(f"  ... and {len(urls) - 3} more")
         except Exception as e:
-            print(f"✗ Failed to load URLs: {e}")
+            print(f" Failed to load URLs: {e}")
     else:
-        print("✗ Sample file not found")
+        print(" Sample file not found")
     
     # Test 4: Validate batch file
     print("\n4. Testing batch file validation:")
     if sample_file.exists():
         try:
             validation = batch_processor.validate_batch_file(sample_file)
-            print(f"✓ Validation results:")
+            print(f" Validation results:")
             print(f"  Total URLs: {validation['total_urls']}")
             print(f"  Valid URLs: {validation['valid_urls']}")
             print(f"  Invalid URLs: {validation['invalid_urls']}")
         except Exception as e:
-            print(f"✗ Failed to validate: {e}")
+            print(f" Failed to validate: {e}")
     
     print("\n" + "=" * 40)
     print("Batch functionality test completed!")

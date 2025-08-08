@@ -156,7 +156,7 @@ class ProjectSetup:
         if not full_path.exists():
             full_path.mkdir(parents=True, exist_ok=True)
             self.created_dirs.append(str(full_path))
-            print(f"✓ Created directory: {path}")
+            print(f" Created directory: {path}")
         else:
             print(f"• Directory exists: {path}")
     
@@ -179,9 +179,9 @@ class ProjectSetup:
             with open(full_path, 'w', encoding='utf-8') as f:
                 f.write(content)
             self.created_files.append(str(full_path))
-            print(f"✓ Created file: {path}")
+            print(f" Created file: {path}")
         except Exception as e:
-            print(f"✗ Failed to create {path}: {e}")
+            print(f" Failed to create {path}: {e}")
     
     # Content generation methods
     def _get_gitignore_content(self) -> str:
@@ -274,12 +274,12 @@ An intuitive CLI interface for yt-dlp that simplifies video downloading with org
 
 ## Features
 
-- 🎬 Simple video downloading with URL input
-- 📋 Batch download support
-- 📁 Automatic file organization by date
-- ⚙️ Easy configuration management
-- 📊 Download history tracking
-- 🎨 Rich terminal interface
+-  Simple video downloading with URL input
+-  Batch download support
+-  Automatic file organization by date
+-  Easy configuration management
+-  Download history tracking
+-  Rich terminal interface
 
 ## Quick Start
 
@@ -642,11 +642,11 @@ class MenuSystem:
     def _show_main_menu(self) -> None:
         """Display and handle the main menu."""
         options = {
-            "1": ("🎬 Quick Download", self._handle_quick_download),
-            "2": ("📋 Batch Download", self._handle_batch_download),
-            "3": ("⚙️ Options & Settings", self._handle_options),
-            "4": ("📊 Download History", self._handle_history),
-            "5": ("❓ Help & Info", self._handle_help),
+            "1": (" Quick Download", self._handle_quick_download),
+            "2": (" Batch Download", self._handle_batch_download),
+            "3": (" Options & Settings", self._handle_options),
+            "4": (" Download History", self._handle_history),
+            "5": (" Help & Info", self._handle_help),
             "q": ("Quit Application", self._handle_quit),
         }
         
@@ -966,29 +966,29 @@ If you encounter issues:
 
     def run_setup(self) -> None:
         """Run the complete project setup."""
-        print("🚀 Setting up VideoMilker project structure...")
+        print(" Setting up VideoMilker project structure...")
         print(f"Root directory: {self.root_path}")
         print()
         
         try:
             # Create directory structure
-            print("📁 Creating directory structure...")
+            print(" Creating directory structure...")
             self.create_directory_structure()
             print()
             
             # Create files
-            print("📄 Creating initial files...")
+            print(" Creating initial files...")
             self.create_initial_files()
             print()
             
             # Summary
-            print("✅ Project setup completed successfully!")
+            print(" Project setup completed successfully!")
             print(f"Created {len(self.created_dirs)} directories")
             print(f"Created {len(self.created_files)} files")
             
             if not self.dry_run:
                 print()
-                print("🎯 Next Steps:")
+                print(" Next Steps:")
                 print("1. Navigate to the project directory:")
                 print(f"   cd {self.root_path}")
                 print("2. Activate virtual environment:")
@@ -1000,7 +1000,7 @@ If you encounter issues:
                 print("   python -m src.videomilker.main")
                 
         except Exception as e:
-            print(f"❌ Setup failed: {e}")
+            print(f" Setup failed: {e}")
             if self.dry_run:
                 print("(This was a dry run - no files were actually created)")
             sys.exit(1)

@@ -18,22 +18,22 @@ An intuitive, tree-structured CLI interface for yt-dlp that eliminates complex c
 
 ```bash
 VideoMilker v1.0
-┌─────────────────────────────────────────┐
-│           Welcome to VideoMilker!       │
-│─────────────────────────────────────────│
-│                                         │
-│  [1] Quick Download                     │
-│  [2] Batch Download                     │
-│  [3] Queue Management                   │
-│  [4] Audio Download (Ctrl+A)            │
-│  [5] Chapter Download (Ctrl+C)          │
-│  [6] Options & Settings                 │
-│  [7] Download History                   │
-│  [8] File Management (Ctrl+F)           │
-│  [9] Help & Info                        │
-│                                         │
-│  [q] Quit Application                   │
-└─────────────────────────────────────────┘
+
+           Welcome to VideoMilker!
+
+
+  [1] Quick Download
+  [2] Batch Download
+  [3] Queue Management
+  [4] Audio Download (Ctrl+A)
+  [5] Chapter Download (Ctrl+C)
+  [6] Options & Settings
+  [7] Download History
+  [8] File Management (Ctrl+F)
+  [9] Help & Info
+
+  [q] Quit Application
+
 
 Global Shortcuts:
 • Ctrl+Q: Quick Download  • Ctrl+B: Batch Download
@@ -45,119 +45,119 @@ Global Shortcuts:
 
 ```bash
 Quick Download
-┌─────────────────────────────────────────┐
-│  Enter video URL below:                 │
-│─────────────────────────────────────────│
-│                                         │
-│  URL: [_________________________]       │
-│                                         │
-│  [Enter] Start Download                 │
-│  [v] Preview Video Info                 │
-│  [f] Choose Format/Quality              │
-│                                         │
-│  [0] ← Back to Main Menu                │
-└─────────────────────────────────────────┘
+
+  Enter video URL below:
+
+
+  URL: [_________________________]
+
+  [Enter] Start Download
+  [v] Preview Video Info
+  [f] Choose Format/Quality
+
+  [0] ← Back to Main Menu
+
 ```
 
 ### 2. Batch Download Menu
 
 ```bash
 Batch Download
-┌─────────────────────────────────────────┐
-│  Choose batch download method:          │
-│─────────────────────────────────────────│
-│                                         │
-│  [1] Paste URLs directly                │
-│  [2] Load from batch file               │
-│  [3] Browse for batch file              │
-│                                         │
-│  [0] ← Back to Main Menu                │
-└─────────────────────────────────────────┘
+
+  Choose batch download method:
+
+
+  [1] Paste URLs directly
+  [2] Load from batch file
+  [3] Browse for batch file
+
+  [0] ← Back to Main Menu
+
 ```
 
 #### 2.1 Direct URL Input
 
 ```bash
 Batch Download - Direct Input
-┌─────────────────────────────────────────┐
-│  Paste URLs (one per line, Ctrl+D to    │
-│  finish):                               │
-│─────────────────────────────────────────│
-│                                         │
-│  1. https://youtube.com/watch?v=...     │
-│  2. https://youtube.com/watch?v=...     │
-│  3. [Enter URL or Ctrl+D to finish]     │
-│                                         │
-│  [Enter] Add URL                        │
-│  [d] Done (start download)              │
-│  [c] Clear all URLs                     │
-│                                         │
-│  [0] ← Back to Batch Menu               │
-└─────────────────────────────────────────┘
+
+  Paste URLs (one per line, Ctrl+D to
+  finish):
+
+
+  1. https://youtube.com/watch?v=...
+  2. https://youtube.com/watch?v=...
+  3. [Enter URL or Ctrl+D to finish]
+
+  [Enter] Add URL
+  [d] Done (start download)
+  [c] Clear all URLs
+
+  [0] ← Back to Batch Menu
+
 ```
 
 ### 3. Options & Settings Menu
 
 ```bash
 Options & Settings
-┌─────────────────────────────────────────┐
-│  Configure VideoMilker settings:        │
-│─────────────────────────────────────────│
-│                                         │
-│  [1] Download Path Settings             │
-│  [2] Audio/Video Format Settings        │
-│  [3] File Organization Settings         │
-│  [4] Advanced yt-dlp Options            │
-│  [5] View/Edit Config Files             │
-│  [6] Reset to Defaults                  │
-│                                         │
-│  [0] ← Back to Main Menu                │
-└─────────────────────────────────────────┘
+
+  Configure VideoMilker settings:
+
+
+  [1] Download Path Settings
+  [2] Audio/Video Format Settings
+  [3] File Organization Settings
+  [4] Advanced yt-dlp Options
+  [5] View/Edit Config Files
+  [6] Reset to Defaults
+
+  [0] ← Back to Main Menu
+
 ```
 
 #### 3.1 Download Path Settings
 
 ```bash
 Download Path Settings
-┌─────────────────────────────────────────┐
-│  Current Path: /Users/name/Downloads    │
-│─────────────────────────────────────────│
-│                                         │
-│  [1] Set Custom Download Path           │
-│  [2] Use Default Downloads Folder       │
-│  [3] Browse for Folder                  │
-│  [4] Save as Default (Config)           │
-│                                         │
-│  Folder Structure:                      │
-│  └── Downloads/                         │
-│      └── VideoMilker/                   │
-│          └── DD/ (current day)          │
-│                                         │
-│  [0] ← Back to Options Menu             │
-└─────────────────────────────────────────┘
+
+  Current Path: /Users/name/Downloads
+
+
+  [1] Set Custom Download Path
+  [2] Use Default Downloads Folder
+  [3] Browse for Folder
+  [4] Save as Default (Config)
+
+  Folder Structure:
+   Downloads/
+       VideoMilker/
+           DD/ (current day)
+
+  [0] ← Back to Options Menu
+
 ```
 
 ### 4. Download History Menu
 
 ```bash
 Download History
-┌─────────────────────────────────────────┐
-│  Recent Downloads:                      │
-│─────────────────────────────────────────│
-│                                         │
-│  2024-01-15 (Today)                     │
-│  └── Video Title 1.mp4 (25.3 MB)        │
-│  └── Video Title 2.mp4 (48.7 MB)        │
-│                                         │
-│  2024-01-14                             │
-│  └── Video Title 3.mp4 (15.2 MB)        │
-│                                         │
-│  [1] View Full History                  │
-│  [2] Clear History                      │
-│  [3] Open Download Folder               │
-│                                         │
-│  [0] ← Back to Main Menu                │
-└─────────────────────────────────────────┘
+
+  Recent Downloads:
+
+
+  2024-01-15 (Today)
+   Video Title 1.mp4 (25.3 MB)
+   Video Title 2.mp4 (48.7 MB)
+
+  2024-01-14
+   Video Title 3.mp4 (15.2 MB)
+
+  [1] View Full History
+  [2] Clear History
+  [3] Open Download Folder
+
+  [0] ← Back to Main Menu
+
 ```
 
 ## File Organization System
@@ -166,18 +166,18 @@ Download History
 
 ```plaintext
 Downloads/
-└── VideoMilker/
-    ├── 01/  # January 1st downloads
-    ├── 02/  # January 2nd downloads
-    ├── 15/  # January 15th downloads (current day)
-    │   ├── YYYY-MM-DD_video-title-1.mp4
-    │   ├── YYYY-MM-DD_video-title-2.mp4
-    │   └── batch_downloads/
-    │       └── YYYY-MM-DD_HH-MM_batch.log
-    └── config/
-        ├── videomilker.json
-        ├── batch_files/
-        └── download_history.json
+ VideoMilker/
+     01/  # January 1st downloads
+     02/  # January 2nd downloads
+     15/  # January 15th downloads (current day)
+        YYYY-MM-DD_video-title-1.mp4
+        YYYY-MM-DD_video-title-2.mp4
+        batch_downloads/
+            YYYY-MM-DD_HH-MM_batch.log
+     config/
+         videomilker.json
+         batch_files/
+         download_history.json
 ```
 
 ### File Naming Convention
@@ -192,32 +192,32 @@ Downloads/
 
 ```bash
 Downloading: Video Title Here
-┌─────────────────────────────────────────┐
-│  Progress: ████████████░░░░░░░  67%     │
-│  Speed: 2.4 MB/s    ETA: 00:45          │
-│  Size: 15.3 MB / 22.8 MB                │
-│                                         │
-│  Status: Downloading video stream...    │
-│                                         │
-│  [Ctrl+C] Cancel Download               │
-└─────────────────────────────────────────┘
+
+  Progress:   67%
+  Speed: 2.4 MB/s    ETA: 00:45
+  Size: 15.3 MB / 22.8 MB
+
+  Status: Downloading video stream...
+
+  [Ctrl+C] Cancel Download
+
 ```
 
 ### Batch Progress Display
 
 ```bash
 Batch Download Progress
-┌─────────────────────────────────────────┐
-│  Overall: ██████░░░░░░░░░░░░░░░  3/8    │
-│                                         │
-│  Video 1 - Complete (25.3 MB)           │
-│  Video 2 - Complete (18.7 MB)           │
-│  Video 3 - Downloading... 45%           │
-│  Video 4 - Queued                       │
-│  Video 5 - Queued                       │
-│                                         │
-│  [p] Pause  [s] Skip Current  [q] Quit  │
-└─────────────────────────────────────────┘
+
+  Overall:   3/8
+
+  Video 1 - Complete (25.3 MB)
+  Video 2 - Complete (18.7 MB)
+  Video 3 - Downloading... 45%
+  Video 4 - Queued
+  Video 5 - Queued
+
+  [p] Pause  [s] Skip Current  [q] Quit
+
 ```
 
 ## Error Handling & User Guidance
@@ -226,19 +226,19 @@ Batch Download Progress
 
 ```bash
 Download Error
-┌─────────────────────────────────────────┐
-│  Error: Video unavailable or private    │
-│                                         │
-│  URL: https://youtube.com/watch?v=...   │
-│                                         │
-│  Suggestions:                           │
-│  • Check if video is public             │
-│  • Verify URL is correct                │
-│  • Try again later                      │
-│                                         │
-│  [r] Retry  [s] Skip  [c] Continue      │
-│  [0] ← Back to Main Menu                │
-└─────────────────────────────────────────┘
+
+  Error: Video unavailable or private
+
+  URL: https://youtube.com/watch?v=...
+
+  Suggestions:
+  • Check if video is public
+  • Verify URL is correct
+  • Try again later
+
+  [r] Retry  [s] Skip  [c] Continue
+  [0] ← Back to Main Menu
+
 ```
 
 ## Configuration Management
@@ -324,20 +324,20 @@ def log_download(url: str, filename: str, size: int, status: str):
 
 ### Quality of Life Features
 
-1. **Auto-detection**: Recognize video platforms and suggest optimal settings ✅
-2. **Resume Downloads**: Continue interrupted downloads ✅
-3. **Duplicate Detection**: Warn about already downloaded videos ✅
-4. **Format Preview**: Show available formats before download ✅
-5. **Keyboard Shortcuts**: Quick access to common actions ✅
-6. **Search History**: Recent URLs for easy re-download ✅
-7. **Export Options**: Save download lists for later use ✅
-8. **Auto-Download Mode**: Skip confirmation dialogs permanently ✅
-9. **Queue Management**: Pause/resume/stop download queues ✅
-10. **Audio-Only Downloads**: Extract audio with format selection ✅
-11. **Chapter Splitting**: Download videos with chapter extraction ✅
-12. **File Management**: Organize and clean up download directories ✅
-13. **Configuration Tools**: Export/import settings with validation ✅
-14. **Storage Analysis**: Monitor disk usage and get recommendations ✅
+1. **Auto-detection**: Recognize video platforms and suggest optimal settings
+2. **Resume Downloads**: Continue interrupted downloads
+3. **Duplicate Detection**: Warn about already downloaded videos
+4. **Format Preview**: Show available formats before download
+5. **Keyboard Shortcuts**: Quick access to common actions
+6. **Search History**: Recent URLs for easy re-download
+7. **Export Options**: Save download lists for later use
+8. **Auto-Download Mode**: Skip confirmation dialogs permanently
+9. **Queue Management**: Pause/resume/stop download queues
+10. **Audio-Only Downloads**: Extract audio with format selection
+11. **Chapter Splitting**: Download videos with chapter extraction
+12. **File Management**: Organize and clean up download directories
+13. **Configuration Tools**: Export/import settings with validation
+14. **Storage Analysis**: Monitor disk usage and get recommendations
 
 ### Accessibility Considerations
 

@@ -86,7 +86,7 @@ python -m videomilker --config /path/to/config.json --verbose
 
 ## Project Status
 
-### ✅ Completed Features
+### Completed Features
 
 - Rich-based terminal UI with menu system and keyboard shortcuts
 - Click CLI with command-line options and direct download support
@@ -114,13 +114,13 @@ python -m videomilker --config /path/to/config.json --verbose
 - Storage analysis and recommendations
 - File organization by type with extension-based sorting
 
-### 🚧 In Development
+### In Development
 
 - Additional UI themes and customization options
 - Advanced format selection interface improvements
 - Plugin system for extensibility
 
-### 📋 Planned Features
+### Planned Features
 
 - Web interface (optional)
 - Advanced post-processing options
