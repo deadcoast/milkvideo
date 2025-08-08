@@ -455,6 +455,51 @@ class HistoryManager:
         except Exception as e:
             raise HistoryError(f"Failed to clear history: {e}")
     
+    def clear_all_history(self) -> int:
+        """Clear all download history (alias for clear_history)."""
+        return self.clear_history()
+    
+    def clear_old_history(self, days: int = 30) -> int:
+        """Clear download history older than specified days."""
+        try:
+            cutoff_date = datetime.now() - timedelta(days=days)
+            
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                
+                cursor.execute("""
+                    DELETE FROM downloads 
+                    WHERE download_date < ?
+                """, (cutoff_date.isoformat(),))
+                
+                conn.commit()
+                
+                return cursor.rowcount
+                
+        except Exception as e:
+            raise HistoryError(f"Failed to clear old history: {e}")
+    
+    def clear_failed_downloads(self) -> int:
+        """Clear only failed downloads from history."""
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                
+                cursor.execute("DELETE FROM downloads WHERE status = 'failed'")
+                conn.commit()
+                
+                return cursor.rowcount
+                
+        except Exception as e:
+            raise HistoryError(f"Failed to clear failed downloads: {e}")
+    
+    def clear_statistics(self) -> int:
+        """Clear download statistics (this is a placeholder - statistics are calculated from downloads)."""
+        # Since statistics are calculated from the downloads table,
+        # clearing statistics would mean clearing all downloads
+        # For now, we'll just return 0 as this might be used for future statistics tables
+        return 0
+    
     def _cleanup_old_entries(self) -> None:
         """Clean up old entries based on settings."""
         if not self.settings.history.auto_cleanup:

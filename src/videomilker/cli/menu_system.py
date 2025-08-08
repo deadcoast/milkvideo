@@ -147,7 +147,7 @@ class MenuSystem:
             'I': self._handle_history,
             
             # Special shortcuts
-            '?': self._handle_help,
+            '?': self._show_keyboard_shortcuts,
             'esc': self._go_back,
             'ESC': self._go_back,
         }
@@ -169,31 +169,26 @@ class MenuSystem:
             self._main_menu_shown = True
         
         options = {
-            "1": (" Quick Download (D)", self._handle_quick_download),
-            "2": (" Audio-Only Download (A)", self._handle_audio_download),
-            "3": (" Chapter Split Download (C)", self._handle_chapter_download),
-            "4": (" Batch Download (B)", self._handle_batch_download),
-            "5": (" Resume Interrupted Downloads (R)", self._handle_resume_downloads),
-            "6": (" File Management (F)", self._handle_file_management),
-            "7": (" Options & Settings (S)", self._handle_options),
-            "8": (" Download History (I)", self._handle_history),
-            "9": (" Help & Info (H)", self._handle_help),
-            "q": ("Quit Application (Q)", self._handle_quit),
+            "1": (" Quick Download", self._handle_quick_download),
+            "2": (" Audio-Only Download", self._handle_audio_download),
+            "3": (" Chapter Split Download", self._handle_chapter_download),
+            "4": (" Batch Download", self._handle_batch_download),
+            "5": (" Resume Interrupted Downloads", self._handle_resume_downloads),
+            "6": (" File Management", self._handle_file_management),
+            "7": (" Options & Settings", self._handle_options),
+            "8": (" Download History", self._handle_history),
+            "9": (" Help & Info", self._handle_help),
+            "q": ("Quit Application", self._handle_quit),
         }
         
-        # Show global shortcuts info
-        shortcuts_info = """
-        [dim]Global Shortcuts:[/dim]
-        [dim]• 0, b, B - Go Back  • q, Q - Quit  • ? - Help[/dim]
-        [dim]• d, D - Quick Download  • a, A - Audio  • c, C - Chapters[/dim]
-        [dim]• b, B - Batch  • r, R - Resume  • f, F - Files  • s, S - Settings[/dim]
-        """
+        # Simple shortcut hint
+        shortcut_hint = "[dim]Press ? for keyboard shortcuts[/dim]"
         
         choice = self.renderer.show_menu(
             "VideoMilker Main Menu", 
             options, 
             show_shortcuts=True,
-            extra_info=shortcuts_info
+            extra_info=shortcut_hint
         )
         
         # Check for global shortcuts first
@@ -1615,7 +1610,7 @@ Download multiple videos with advanced queue management and processing options.
         
         panel = Panel(
             header_content,
-            title="[bold blue]📋 Batch Download[/bold blue]",
+            title="[bold blue] Batch Download[/bold blue]",
             border_style=self.renderer.theme['border_style'],
             box=self.renderer._get_box_style()
         )
@@ -1626,11 +1621,11 @@ Download multiple videos with advanced queue management and processing options.
     def _show_batch_main_options(self) -> str:
         """Show main batch download options and return user choice."""
         options = {
-            "1": ("📝 Direct URL Input", lambda: "direct_urls"),
-            "2": ("📁 Load from File", lambda: "file_loading"),
-            "3": ("🎵 Audio-Only Batch", lambda: "audio_batch"),
-            "4": ("⚙️ Queue Management", lambda: "queue_management"),
-            "5": ("📋 Templates & Tools", lambda: "templates"),
+            "1": (" Direct URL Input", lambda: "direct_urls"),
+            "2": (" Load from File", lambda: "file_loading"),
+            "3": (" Audio-Only Batch", lambda: "audio_batch"),
+            "4": (" Queue Management", lambda: "queue_management"),
+            "5": (" Templates & Tools", lambda: "templates"),
             "0": ("← Back to Main Menu", lambda: "back")
         }
         
@@ -1652,10 +1647,10 @@ Download multiple videos with advanced queue management and processing options.
             try:
                 # Show URL input options
                 input_options = {
-                    "1": ("📝 Manual Entry", self._manual_batch_url_input),
-                    "2": ("📋 Paste from Clipboard", self._clipboard_batch_url_input),
-                    "3": ("📚 Select from Recent", self._recent_batch_url_input),
-                    "4": ("📄 Load from Text", self._text_batch_url_input),
+                    "1": (" Manual Entry", self._manual_batch_url_input),
+                    "2": (" Paste from Clipboard", self._clipboard_batch_url_input),
+                    "3": (" Select from Recent", self._recent_batch_url_input),
+                    "4": (" Load from Text", self._text_batch_url_input),
                     "0": ("← Back to Batch Menu", lambda: None)
                 }
                 
@@ -1692,10 +1687,10 @@ Download multiple videos with advanced queue management and processing options.
             try:
                 # Show file loading options
                 file_options = {
-                    "1": ("📁 Browse for File", self._handle_browse_file),
-                    "2": ("📝 Enter File Path", self._handle_enter_file_path),
-                    "3": ("📚 Recent Files", self._handle_recent_files),
-                    "4": ("📋 Batch Templates", self._handle_batch_templates),
+                    "1": (" Browse for File", self._handle_browse_file),
+                    "2": (" Enter File Path", self._handle_enter_file_path),
+                    "3": (" Recent Files", self._handle_recent_files),
+                    "4": (" Batch Templates", self._handle_batch_templates),
                     "0": ("← Back to Batch Menu", lambda: None)
                 }
                 
@@ -1736,7 +1731,7 @@ Download multiple videos with advanced queue management and processing options.
                 status_info = f"""
                 [bold]Queue Status: {status['status'].upper()}[/bold]
                 
-                📊 Queue Statistics:
+                 Queue Statistics:
                 • Total URLs: {status['total_urls']}
                 • Completed: {status['completed']}
                 • Failed: {status['failed']}
@@ -1750,40 +1745,40 @@ Download multiple videos with advanced queue management and processing options.
                 
                 if status['status'] == 'idle':
                     options.update({
-                        "1": ("📝 Add URLs to Queue", self._add_urls_to_queue),
-                        "2": ("📁 Load URLs from File", self._load_urls_to_queue),
-                        "3": ("📋 Import from Clipboard", self._import_urls_from_clipboard),
-                        "4": ("📚 Load from Templates", self._load_urls_from_templates),
+                        "1": (" Add URLs to Queue", self._add_urls_to_queue),
+                        "2": (" Load URLs from File", self._load_urls_to_queue),
+                        "3": (" Import from Clipboard", self._import_urls_from_clipboard),
+                        "4": (" Load from Templates", self._load_urls_from_templates),
                     })
                 elif status['status'] == 'running':
                     options.update({
-                        "1": ("⏸️ Pause Processing", self._pause_queue),
-                        "2": ("⏹️ Stop Processing", self._stop_queue),
-                        "3": ("📊 Show Progress", self._show_queue_progress),
-                        "4": ("🔍 View Queue Contents", self._view_queue_contents),
-                        "5": ("⚡ Performance Monitor", self._show_performance_monitor),
+                        "1": ("⏸ Pause Processing", self._pause_queue),
+                        "2": ("⏹ Stop Processing", self._stop_queue),
+                        "3": (" Show Progress", self._show_queue_progress),
+                        "4": (" View Queue Contents", self._view_queue_contents),
+                        "5": (" Performance Monitor", self._show_performance_monitor),
                     })
                 elif status['status'] == 'paused':
                     options.update({
-                        "1": ("▶️ Resume Processing", self._resume_queue),
-                        "2": ("⏹️ Stop Processing", self._stop_queue),
-                        "3": ("📊 Show Progress", self._show_queue_progress),
-                        "4": ("🔍 View Queue Contents", self._view_queue_contents),
-                        "5": ("⚙️ Modify Queue", self._modify_queue),
+                        "1": (" Resume Processing", self._resume_queue),
+                        "2": ("⏹ Stop Processing", self._stop_queue),
+                        "3": (" Show Progress", self._show_queue_progress),
+                        "4": (" View Queue Contents", self._view_queue_contents),
+                        "5": (" Modify Queue", self._modify_queue),
                     })
                 elif status['status'] == 'completed':
                     options.update({
-                        "1": ("📋 View Results", self._view_queue_results),
-                        "2": ("🔄 Retry Failed Downloads", self._retry_failed_downloads),
-                        "3": ("📤 Export Results", self._export_queue_results),
-                        "4": ("📊 Generate Report", self._generate_queue_report),
-                        "5": ("🗑️ Clear Queue", self._clear_queue),
+                        "1": (" View Results", self._view_queue_results),
+                        "2": (" Retry Failed Downloads", self._retry_failed_downloads),
+                        "3": (" Export Results", self._export_queue_results),
+                        "4": (" Generate Report", self._generate_queue_report),
+                        "5": (" Clear Queue", self._clear_queue),
                     })
                 
                 # Common options
                 options.update({
-                    "6": ("📈 Queue Analytics", self._show_queue_analytics),
-                    "7": ("⚙️ Queue Settings", self._handle_queue_settings),
+                    "6": (" Queue Analytics", self._show_queue_analytics),
+                    "7": (" Queue Settings", self._handle_queue_settings),
                     "0": ("← Back to Batch Menu", lambda: None),
                 })
                 
@@ -1809,11 +1804,11 @@ Download multiple videos with advanced queue management and processing options.
                 self.renderer.show_info("This feature allows you to download audio from multiple videos efficiently.")
                 
                 options = {
-                    "1": ("📝 Add Audio URLs", self._add_audio_urls_to_batch),
-                    "2": ("📁 Load Audio URLs from File", self._load_audio_urls_from_file),
-                    "3": ("🎵 Audio Format Settings", self._handle_audio_batch_format_settings),
-                    "4": ("⚙️ Audio Quality Settings", self._handle_audio_batch_quality_settings),
-                    "5": ("📊 Audio Batch Statistics", self._show_audio_batch_statistics),
+                    "1": (" Add Audio URLs", self._add_audio_urls_to_batch),
+                    "2": (" Load Audio URLs from File", self._load_audio_urls_from_file),
+                    "3": (" Audio Format Settings", self._handle_audio_batch_format_settings),
+                    "4": (" Audio Quality Settings", self._handle_audio_batch_quality_settings),
+                    "5": (" Audio Batch Statistics", self._show_audio_batch_statistics),
                     "0": ("← Back to Batch Menu", lambda: None),
                 }
                 
@@ -1872,7 +1867,7 @@ Download multiple videos with advanced queue management and processing options.
             options = {}
             for i, template in enumerate(templates, 1):
                 template_name = Path(template).stem
-                options[str(i)] = (f"📋 {template_name}", template)
+                options[str(i)] = (f" {template_name}", template)
             
             options["0"] = ("← Back", None)
             
@@ -1912,13 +1907,13 @@ Download multiple videos with advanced queue management and processing options.
             performance_info = f"""
             [bold]Performance Monitor[/bold]
             
-            📊 Queue Performance:
+             Queue Performance:
             • Processing Speed: {status.get('speed', 'N/A')} downloads/min
             • Memory Usage: {status.get('memory_usage', 'N/A')} MB
             • CPU Usage: {status.get('cpu_usage', 'N/A')}%
             • Network Speed: {status.get('network_speed', 'N/A')} MB/s
             
-            ⏱️ Time Estimates:
+            ⏱ Time Estimates:
             • Estimated Time Remaining: {status.get('eta', 'N/A')}
             • Average Time per Download: {status.get('avg_time', 'N/A')} seconds
             """
@@ -1933,10 +1928,10 @@ Download multiple videos with advanced queue management and processing options.
         """Modify the current queue."""
         try:
             options = {
-                "1": ("🔄 Reorder Queue", self._reorder_queue),
-                "2": ("❌ Remove Items", self._remove_queue_items),
-                "3": ("➕ Add More URLs", self._add_urls_to_queue),
-                "4": ("🔄 Retry Failed", self._retry_failed_downloads),
+                "1": (" Reorder Queue", self._reorder_queue),
+                "2": (" Remove Items", self._remove_queue_items),
+                "3": (" Add More URLs", self._add_urls_to_queue),
+                "4": (" Retry Failed", self._retry_failed_downloads),
                 "0": ("← Back", lambda: None),
             }
             
@@ -1960,9 +1955,9 @@ Download multiple videos with advanced queue management and processing options.
                 return
             
             export_options = {
-                "1": ("📄 Export as CSV", lambda: self._export_results_csv(results)),
-                "2": ("📊 Export as JSON", lambda: self._export_results_json(results)),
-                "3": ("📋 Export as Text", lambda: self._export_results_text(results)),
+                "1": (" Export as CSV", lambda: self._export_results_csv(results)),
+                "2": (" Export as JSON", lambda: self._export_results_json(results)),
+                "3": (" Export as Text", lambda: self._export_results_text(results)),
                 "0": ("← Back", lambda: None),
             }
             
@@ -2004,13 +1999,13 @@ Download multiple videos with advanced queue management and processing options.
                 analytics_info = f"""
                 [bold]Queue Analytics[/bold]
                 
-                📈 Performance Metrics:
+                 Performance Metrics:
                 • Total Downloads: {analytics.get('total_downloads', 0)}
                 • Success Rate: {analytics.get('success_rate', 0):.1f}%
                 • Average Download Time: {analytics.get('avg_download_time', 0):.1f} seconds
                 • Total Data Downloaded: {analytics.get('total_data_mb', 0):.1f} MB
                 
-                🎯 Quality Metrics:
+                 Quality Metrics:
                 • Average Video Quality: {analytics.get('avg_quality', 'N/A')}
                 • Most Common Format: {analytics.get('most_common_format', 'N/A')}
                 • Failed Download Reasons: {analytics.get('failure_reasons', 'N/A')}
@@ -2034,10 +2029,10 @@ Download multiple videos with advanced queue management and processing options.
                 self.renderer.show_info(f"  • Timeout: {self.settings.download.timeout} seconds")
                 
                 options = {
-                    "1": ("⚡ Concurrent Downloads", self._set_concurrent_limit),
-                    "2": ("🔄 Retry Settings", self._handle_retry_settings),
-                    "3": ("⏱️ Timeout Settings", self._handle_timeout_settings),
-                    "4": ("💾 Memory Settings", self._handle_memory_settings),
+                    "1": (" Concurrent Downloads", self._set_concurrent_limit),
+                    "2": (" Retry Settings", self._handle_retry_settings),
+                    "3": ("⏱ Timeout Settings", self._handle_timeout_settings),
+                    "4": (" Memory Settings", self._handle_memory_settings),
                     "0": ("← Back", lambda: None),
                 }
                 
@@ -2068,7 +2063,7 @@ Download multiple videos with advanced queue management and processing options.
                 
                 if self.input_handler.validate_url(url):
                     urls.append(url.strip())
-                    self.renderer.show_success(f"✓ Added: {url[:50]}...")
+                    self.renderer.show_success(f" Added: {url[:50]}...")
                 else:
                     self.renderer.show_warning("Invalid URL, skipping...")
             
@@ -2115,11 +2110,11 @@ Download multiple videos with advanced queue management and processing options.
             self.renderer.show_info("Configure default audio format for batch processing")
             
             format_options = {
-                "1": ("🎵 M4A (AAC)", "m4a"),
-                "2": ("🎵 MP3", "mp3"),
-                "3": ("🎵 OPUS", "opus"),
-                "4": ("🎵 AAC", "aac"),
-                "5": ("🎵 FLAC", "flac"),
+                "1": (" M4A (AAC)", "m4a"),
+                "2": (" MP3", "mp3"),
+                "3": (" OPUS", "opus"),
+                "4": (" AAC", "aac"),
+                "5": (" FLAC", "flac"),
                 "0": ("← Back", lambda: None),
             }
             
@@ -2143,10 +2138,10 @@ Download multiple videos with advanced queue management and processing options.
             self.renderer.show_info("Configure audio quality for batch processing")
             
             quality_options = {
-                "1": ("🎵 Best Quality", "best"),
-                "2": ("🎵 High Quality (192k)", "192"),
-                "3": ("🎵 Medium Quality (128k)", "128"),
-                "4": ("🎵 Low Quality (64k)", "64"),
+                "1": (" Best Quality", "best"),
+                "2": (" High Quality (192k)", "192"),
+                "3": (" Medium Quality (128k)", "128"),
+                "4": (" Low Quality (64k)", "64"),
                 "0": ("← Back", lambda: None),
             }
             
@@ -2172,19 +2167,19 @@ Download multiple videos with advanced queue management and processing options.
                 stats_info = f"""
                 [bold]Audio Batch Statistics[/bold]
                 
-                📊 Processing Stats:
+                 Processing Stats:
                 • Total Audio Files: {stats.get('total_audio', 0)}
                 • Successfully Processed: {stats.get('successful', 0)}
                 • Failed: {stats.get('failed', 0)}
                 • Success Rate: {stats.get('success_rate', 0):.1f}%
                 
-                🎵 Format Distribution:
+                 Format Distribution:
                 • M4A: {stats.get('m4a_count', 0)}
                 • MP3: {stats.get('mp3_count', 0)}
                 • OPUS: {stats.get('opus_count', 0)}
                 • FLAC: {stats.get('flac_count', 0)}
                 
-                💾 Total Size: {stats.get('total_size_mb', 0):.1f} MB
+                 Total Size: {stats.get('total_size_mb', 0):.1f} MB
                 """
                 
                 self.renderer.show_info(stats_info)
@@ -2199,11 +2194,11 @@ Download multiple videos with advanced queue management and processing options.
         """Get audio format for batch processing."""
         try:
             format_options = {
-                "1": ("🎵 M4A (AAC)", "m4a"),
-                "2": ("🎵 MP3", "mp3"),
-                "3": ("🎵 OPUS", "opus"),
-                "4": ("🎵 AAC", "aac"),
-                "5": ("🎵 FLAC", "flac"),
+                "1": (" M4A (AAC)", "m4a"),
+                "2": (" MP3", "mp3"),
+                "3": (" OPUS", "opus"),
+                "4": (" AAC", "aac"),
+                "5": (" FLAC", "flac"),
             }
             
             choice = self.renderer.show_menu("Select Audio Format for Batch", format_options, back_option=False)
@@ -2223,9 +2218,9 @@ Download multiple videos with advanced queue management and processing options.
             summary = f"""
             [bold]Audio Batch Download Summary[/bold]
             
-            📝 URLs to Process: {len(urls)}
-            🎵 Audio Format: {audio_format.upper()}
-            📁 Download Path: {self.settings.download.path}
+             URLs to Process: {len(urls)}
+             Audio Format: {audio_format.upper()}
+             Download Path: {self.settings.download.path}
             
             Ready to start audio batch download?
             """
@@ -2327,9 +2322,9 @@ Download multiple videos with advanced queue management and processing options.
             self.renderer.show_info("Configure memory usage for batch processing")
             
             options = {
-                "1": ("💾 Set Memory Limit", self._set_memory_limit),
-                "2": ("🔄 Garbage Collection", self._handle_garbage_collection),
-                "3": ("📊 Memory Monitoring", self._show_memory_usage),
+                "1": (" Set Memory Limit", self._set_memory_limit),
+                "2": (" Garbage Collection", self._handle_garbage_collection),
+                "3": (" Memory Monitoring", self._show_memory_usage),
                 "0": ("← Back", lambda: None),
             }
             
@@ -2373,9 +2368,9 @@ Download multiple videos with advanced queue management and processing options.
             self.renderer.show_info("Configure automatic memory cleanup")
             
             options = {
-                "1": ("🔄 Enable Auto GC", lambda: self._set_auto_gc(True)),
-                "2": ("❌ Disable Auto GC", lambda: self._set_auto_gc(False)),
-                "3": ("🧹 Manual GC", self._run_manual_gc),
+                "1": (" Enable Auto GC", lambda: self._set_auto_gc(True)),
+                "2": (" Disable Auto GC", lambda: self._set_auto_gc(False)),
+                "3": (" Manual GC", self._run_manual_gc),
                 "0": ("← Back", lambda: None),
             }
             
@@ -2417,9 +2412,9 @@ Download multiple videos with advanced queue management and processing options.
             memory_text = f"""
             [bold]Memory Usage[/bold]
             
-            💾 Current Memory: {memory_info.rss / 1024 / 1024:.1f} MB
-            📊 Virtual Memory: {memory_info.vms / 1024 / 1024:.1f} MB
-            🔄 Memory Limit: {getattr(self.settings.download, 'memory_limit_mb', 1024)} MB
+             Current Memory: {memory_info.rss / 1024 / 1024:.1f} MB
+             Virtual Memory: {memory_info.vms / 1024 / 1024:.1f} MB
+             Memory Limit: {getattr(self.settings.download, 'memory_limit_mb', 1024)} MB
             """
             
             self.renderer.show_info(memory_text)
@@ -2459,9 +2454,9 @@ Download multiple videos with advanced queue management and processing options.
             
             if self.input_handler.validate_url(url):
                 urls.append(url.strip())
-                self.renderer.show_success(f"✓ Added: {url[:50]}...")
+                self.renderer.show_success(f" Added: {url[:50]}...")
             else:
-                self.renderer.show_error(f"✗ Invalid URL: {url}")
+                self.renderer.show_error(f" Invalid URL: {url}")
                 if not self.renderer.show_confirmation("Continue adding URLs?", default=True):
                     break
         
@@ -2557,7 +2552,7 @@ Download multiple videos with advanced queue management and processing options.
         
         # Show URL summary
         summary_content = f"""
-[bold green]📋 Batch Download Summary[/bold green]
+[bold green] Batch Download Summary[/bold green]
 
 [bold]Total URLs:[/bold] {len(urls)}
 [bold]Estimated Time:[/bold] ~{len(urls) * 2} minutes (varies by video size)
@@ -2575,7 +2570,7 @@ Download multiple videos with advanced queue management and processing options.
         
         panel = Panel(
             summary_content,
-            title="[bold green]✓ URLs Ready[/bold green]",
+            title="[bold green] URLs Ready[/bold green]",
             border_style="green",
             box=self.renderer._get_box_style()
         )
@@ -2590,12 +2585,12 @@ Download multiple videos with advanced queue management and processing options.
     def _get_batch_format_choice(self) -> Optional[str]:
         """Get format choice for batch download."""
         options = {
-            "1": ("🏆 Best Quality (Recommended)", lambda: "best"),
-            "2": ("📺 1080p Full HD", lambda: "best[height<=1080]"),
-            "3": ("📺 720p HD", lambda: "best[height<=720]"),
-            "4": ("🎧 Audio Only", lambda: "bestaudio"),
-            "5": ("📱 Lowest Quality (Fastest)", lambda: "worst"),
-            "6": ("⚙️ Use Default Settings", lambda: None),
+            "1": (" Best Quality (Recommended)", lambda: "best"),
+            "2": (" 1080p Full HD", lambda: "best[height<=1080]"),
+            "3": (" 720p HD", lambda: "best[height<=720]"),
+            "4": (" Audio Only", lambda: "bestaudio"),
+            "5": (" Lowest Quality (Fastest)", lambda: "worst"),
+            "6": (" Use Default Settings", lambda: None),
             "0": ("← Back", lambda: "back")
         }
         
@@ -2622,7 +2617,7 @@ Download multiple videos with advanced queue management and processing options.
         }.get(format_choice, "Default settings") if format_choice else "Default settings"
         
         confirm_content = f"""
-[bold yellow]⚠️  Final Confirmation[/bold yellow]
+[bold yellow]  Final Confirmation[/bold yellow]
 
 [bold]URLs:[/bold] {len(urls)}
 [bold]Quality:[/bold] {format_desc}
@@ -2634,7 +2629,7 @@ Download multiple videos with advanced queue management and processing options.
         
         panel = Panel(
             confirm_content,
-            title="[bold yellow]🚀 Ready to Start[/bold yellow]",
+            title="[bold yellow] Ready to Start[/bold yellow]",
             border_style="yellow",
             box=self.renderer._get_box_style()
         )
@@ -2658,7 +2653,7 @@ Download multiple videos with advanced queue management and processing options.
             self.batch_processor.add_urls_to_queue(urls)
             
             # Start processing
-            self.renderer.show_info("🚀 Starting batch download...")
+            self.renderer.show_info(" Starting batch download...")
             
             # Process with concurrency limits
             results = self.batch_processor.process_batch_with_limits(
@@ -2905,7 +2900,7 @@ Download multiple videos with advanced queue management and processing options.
             options = {}
             for i, file_path in enumerate(recent_files, 1):
                 file_name = Path(file_path).name
-                options[str(i)] = (f"📄 {file_name}", file_path)
+                options[str(i)] = (f" {file_name}", file_path)
             
             options["0"] = ("← Back", None)
             
@@ -2969,15 +2964,15 @@ Download multiple videos with advanced queue management and processing options.
                 self._show_configuration_summary()
                 
                 options = {
-                    "1": ("📁 Download Path Settings", self._handle_enhanced_path_settings),
-                    "2": ("⚙️ Format & Quality Settings", self._handle_enhanced_format_settings),
-                    "3": ("📂 File Organization Settings", self._handle_enhanced_organization_settings),
-                    "4": ("🚀 Performance Settings", self._handle_enhanced_performance_settings),
-                    "5": ("🔧 Advanced yt-dlp Options", self._handle_enhanced_advanced_settings),
-                    "6": ("📋 Configuration Management", self._handle_enhanced_config_management),
-                    "7": ("🛠️ Configuration Wizard", self._handle_enhanced_configuration_wizard),
-                    "8": ("📊 View Current Settings", self._handle_view_current_settings),
-                    "9": ("🔄 Reset to Defaults", self._handle_enhanced_reset_defaults),
+                    "1": (" Download Path Settings", self._handle_enhanced_path_settings),
+                    "2": (" Format & Quality Settings", self._handle_enhanced_format_settings),
+                    "3": (" File Organization Settings", self._handle_enhanced_organization_settings),
+                    "4": (" Performance Settings", self._handle_enhanced_performance_settings),
+                    "5": (" Advanced yt-dlp Options", self._handle_enhanced_advanced_settings),
+                    "6": (" Configuration Management", self._handle_enhanced_config_management),
+                    "7": (" Configuration Wizard", self._handle_enhanced_configuration_wizard),
+                    "8": (" View Current Settings", self._handle_view_current_settings),
+                    "9": (" Reset to Defaults", self._handle_enhanced_reset_defaults),
                     "0": ("← Back to Main Menu", lambda: None),
                 }
                 
@@ -3006,12 +3001,12 @@ Download multiple videos with advanced queue management and processing options.
             summary = f"""
             [bold]Current Configuration:[/bold]
             
-            📁 Download Path: {self.settings.download.path}
-            🎯 Default Quality: {self.settings.download.default_quality}
-            📹 Default Format: {self.settings.download.default_format}
-            🔄 Max Concurrent: {self.settings.download.max_concurrent}
-            📂 Create Day Folders: {'Yes' if self.settings.download.create_day_folders else 'No'}
-            🎵 Auto Download: {'Yes' if self.settings.ui.auto_download else 'No'}
+             Download Path: {self.settings.download.path}
+             Default Quality: {self.settings.download.default_quality}
+             Default Format: {self.settings.download.default_format}
+             Max Concurrent: {self.settings.download.max_concurrent}
+             Create Day Folders: {'Yes' if self.settings.download.create_day_folders else 'No'}
+             Auto Download: {'Yes' if self.settings.ui.auto_download else 'No'}
             """
             self.renderer.show_info(summary)
         except Exception as e:
@@ -3034,11 +3029,11 @@ Download multiple videos with advanced queue management and processing options.
                 self.renderer.show_info(folder_structure)
                 
                 options = {
-                    "1": ("📝 Set Custom Download Path", self._set_custom_path),
-                    "2": ("🏠 Use Default Downloads Folder", self._set_default_path),
-                    "3": ("📁 Browse for Folder", self._browse_for_folder),
-                    "4": ("✅ Test Path", self._test_path),
-                    "5": ("📊 Show Path Info", self._show_path_info),
+                    "1": (" Set Custom Download Path", self._set_custom_path),
+                    "2": (" Use Default Downloads Folder", self._set_default_path),
+                    "3": (" Browse for Folder", self._browse_for_folder),
+                    "4": (" Test Path", self._test_path),
+                    "5": (" Show Path Info", self._show_path_info),
                     "0": ("← Back to Options Menu", lambda: None),
                 }
                 
@@ -3061,11 +3056,11 @@ Download multiple videos with advanced queue management and processing options.
                 self.renderer.show_info(f"  • Default Format: {self.settings.download.default_format}")
                 
                 options = {
-                    "1": ("🎯 Set Default Quality", self._set_default_quality),
-                    "2": ("📹 Set Default Format", self._set_default_format),
-                    "3": ("🎵 Audio Format Settings", self._handle_audio_format_settings),
-                    "4": ("📊 Quality Presets", self._handle_quality_presets),
-                    "5": ("🔧 Advanced Format Options", self._handle_advanced_format_options),
+                    "1": (" Set Default Quality", self._set_default_quality),
+                    "2": (" Set Default Format", self._set_default_format),
+                    "3": (" Audio Format Settings", self._handle_audio_format_settings),
+                    "4": (" Quality Presets", self._handle_quality_presets),
+                    "5": (" Advanced Format Options", self._handle_advanced_format_options),
                     "0": ("← Back to Options Menu", lambda: None),
                 }
                 
@@ -3088,10 +3083,10 @@ Download multiple videos with advanced queue management and processing options.
                 self.renderer.show_info(f"  • File Naming: {self.settings.download.file_naming}")
                 
                 options = {
-                    "1": ("📂 Day Folder Settings", self._handle_day_folder_settings),
-                    "2": ("📝 File Naming Settings", self._handle_file_naming_settings),
-                    "3": ("🗂️ Folder Structure Settings", self._handle_folder_structure_settings),
-                    "4": ("📋 Metadata Settings", self._handle_metadata_settings),
+                    "1": (" Day Folder Settings", self._handle_day_folder_settings),
+                    "2": (" File Naming Settings", self._handle_file_naming_settings),
+                    "3": (" Folder Structure Settings", self._handle_folder_structure_settings),
+                    "4": (" Metadata Settings", self._handle_metadata_settings),
                     "0": ("← Back to Options Menu", lambda: None),
                 }
                 
@@ -3113,10 +3108,10 @@ Download multiple videos with advanced queue management and processing options.
                 self.renderer.show_info(f"  • Max Concurrent Downloads: {self.settings.download.max_concurrent}")
                 
                 options = {
-                    "1": ("⚡ Concurrent Download Limits", self._set_concurrent_limit),
-                    "2": ("💾 Memory Management", self._handle_memory_settings),
-                    "3": ("🌐 Network Settings", self._handle_network_settings),
-                    "4": ("📊 Performance Monitoring", self._view_performance_settings),
+                    "1": (" Concurrent Download Limits", self._set_concurrent_limit),
+                    "2": (" Memory Management", self._handle_memory_settings),
+                    "3": (" Network Settings", self._handle_network_settings),
+                    "4": (" Performance Monitoring", self._view_performance_settings),
                     "0": ("← Back to Options Menu", lambda: None),
                 }
                 
@@ -3135,11 +3130,11 @@ Download multiple videos with advanced queue management and processing options.
         while True:
             try:
                 options = {
-                    "1": ("🔧 yt-dlp Arguments", self._handle_ytdlp_arguments),
-                    "2": ("🌐 Proxy Settings", self._handle_proxy_settings),
-                    "3": ("🍪 Cookie Management", self._handle_cookie_settings),
-                    "4": ("🔐 Authentication", self._handle_auth_settings),
-                    "5": ("📋 Custom Headers", self._handle_custom_headers),
+                    "1": (" yt-dlp Arguments", self._handle_ytdlp_arguments),
+                    "2": (" Proxy Settings", self._handle_proxy_settings),
+                    "3": (" Cookie Management", self._handle_cookie_settings),
+                    "4": (" Authentication", self._handle_auth_settings),
+                    "5": (" Custom Headers", self._handle_custom_headers),
                     "0": ("← Back to Options Menu", lambda: None),
                 }
                 
@@ -3158,12 +3153,12 @@ Download multiple videos with advanced queue management and processing options.
         while True:
             try:
                 options = {
-                    "1": ("📤 Export Configuration", self._export_configuration),
-                    "2": ("📥 Import Configuration", self._import_configuration),
-                    "3": ("✅ Validate Configuration", self._validate_configuration),
-                    "4": ("🔧 Auto-Fix Configuration", self._auto_fix_configuration),
-                    "5": ("📁 View/Edit Config Files", self._handle_config_files),
-                    "6": ("📊 Configuration Backup", self._handle_config_backup),
+                    "1": (" Export Configuration", self._export_configuration),
+                    "2": (" Import Configuration", self._import_configuration),
+                    "3": (" Validate Configuration", self._validate_configuration),
+                    "4": (" Auto-Fix Configuration", self._auto_fix_configuration),
+                    "5": (" View/Edit Config Files", self._handle_config_files),
+                    "6": (" Configuration Backup", self._handle_config_backup),
                     "0": ("← Back to Options Menu", lambda: None),
                 }
                 
@@ -3686,14 +3681,14 @@ Download multiple videos with advanced queue management and processing options.
                 self._show_recent_downloads_summary()
                 
                 options = {
-                    "1": ("📋 View Full History", self._handle_enhanced_full_history),
-                    "2": ("🔍 Search History", self._handle_enhanced_search_history),
-                    "3": ("🔬 Advanced Search", self._handle_enhanced_advanced_search),
-                    "4": ("📊 Download Statistics", self._handle_download_statistics),
-                    "5": ("📤 Export History", self._handle_export_history),
-                    "6": ("🗂️ Open Download Folder", self._handle_open_folder),
-                    "7": ("🧹 Clear History", self._handle_enhanced_clear_history),
-                    "8": ("⚙️ History Settings", self._handle_history_settings),
+                    "1": (" View Full History", self._handle_enhanced_full_history),
+                    "2": (" Search History", self._handle_enhanced_search_history),
+                    "3": (" Advanced Search", self._handle_enhanced_advanced_search),
+                    "4": (" Download Statistics", self._handle_download_statistics),
+                    "5": (" Export History", self._handle_export_history),
+                    "6": (" Open Download Folder", self._handle_open_folder),
+                    "7": (" Clear History", self._handle_enhanced_clear_history),
+                    "8": (" History Settings", self._handle_history_settings),
                     "0": ("← Back to Main Menu", lambda: None),
                 }
                 
@@ -3769,11 +3764,11 @@ Download multiple videos with advanced queue management and processing options.
                 # Pagination options
                 options = {}
                 if page > 1:
-                    options["1"] = ("⬅️ Previous Page", lambda: "prev")
+                    options["1"] = (" Previous Page", lambda: "prev")
                 if page < total_pages:
-                    options["2"] = ("➡️ Next Page", lambda: "next")
-                options["3"] = ("🔍 Search", lambda: "search")
-                options["4"] = ("📊 Statistics", lambda: "stats")
+                    options["2"] = (" Next Page", lambda: "next")
+                options["3"] = (" Search", lambda: "search")
+                options["4"] = (" Statistics", lambda: "stats")
                 options["0"] = ("← Back", lambda: "back")
                 
                 choice = self.renderer.show_menu("History Navigation", options, back_option=False)
@@ -3800,12 +3795,12 @@ Download multiple videos with advanced queue management and processing options.
         while True:
             try:
                 search_options = {
-                    "1": ("🔍 Search by Title", lambda: self._search_by_title()),
-                    "2": ("🔗 Search by URL", lambda: self._search_by_url()),
-                    "3": ("👤 Search by Uploader", lambda: self._search_by_uploader()),
-                    "4": ("📅 Search by Date Range", lambda: self._search_by_date_range()),
-                    "5": ("📊 Search by Status", lambda: self._search_by_status()),
-                    "6": ("🔬 Advanced Search", lambda: self._handle_enhanced_advanced_search()),
+                    "1": (" Search by Title", lambda: self._search_by_title()),
+                    "2": (" Search by URL", lambda: self._search_by_url()),
+                    "3": (" Search by Uploader", lambda: self._search_by_uploader()),
+                    "4": (" Search by Date Range", lambda: self._search_by_date_range()),
+                    "5": (" Search by Status", lambda: self._search_by_status()),
+                    "6": (" Advanced Search", lambda: self._handle_enhanced_advanced_search()),
                     "0": ("← Back", lambda: None),
                 }
                 
@@ -3913,13 +3908,13 @@ Download multiple videos with advanced queue management and processing options.
             status_stats = f"""
             [bold]Download Statistics:[/bold]
             
-            📊 Total Downloads: {total_downloads}
-            ✅ Completed: {completed} ({(completed/total_downloads)*100:.1f}%)
-            ❌ Failed: {failed} ({(failed/total_downloads)*100:.1f}%)
-            ⏹️ Cancelled: {cancelled} ({(cancelled/total_downloads)*100:.1f}%)
+             Total Downloads: {total_downloads}
+             Completed: {completed} ({(completed/total_downloads)*100:.1f}%)
+             Failed: {failed} ({(failed/total_downloads)*100:.1f}%)
+            ⏹ Cancelled: {cancelled} ({(cancelled/total_downloads)*100:.1f}%)
             
-            💾 Total Size: {total_size / (1024*1024):.1f} MB
-            📏 Average Size: {avg_size / (1024*1024):.1f} MB
+             Total Size: {total_size / (1024*1024):.1f} MB
+             Average Size: {avg_size / (1024*1024):.1f} MB
             """
             
             self.renderer.show_info(status_stats)
@@ -3946,10 +3941,10 @@ Download multiple videos with advanced queue management and processing options.
         """Handle history export functionality."""
         try:
             export_options = {
-                "1": ("📄 Export as CSV", lambda: self._export_history_csv()),
-                "2": ("📊 Export as JSON", lambda: self._export_history_json()),
-                "3": ("📋 Export as Text", lambda: self._export_history_text()),
-                "4": ("📈 Export Statistics", lambda: self._export_history_stats()),
+                "1": (" Export as CSV", lambda: self._export_history_csv()),
+                "2": (" Export as JSON", lambda: self._export_history_json()),
+                "3": (" Export as Text", lambda: self._export_history_text()),
+                "4": (" Export Statistics", lambda: self._export_history_stats()),
                 "0": ("← Back", lambda: None),
             }
             
@@ -3974,10 +3969,10 @@ Download multiple videos with advanced queue management and processing options.
             """)
             
             clear_options = {
-                "1": ("🗑️ Clear All History", lambda: "all"),
-                "2": ("📅 Clear Old History (>30 days)", lambda: "old"),
-                "3": ("❌ Clear Failed Downloads Only", lambda: "failed"),
-                "4": ("📊 Clear Statistics Only", lambda: "stats"),
+                "1": (" Clear All History", lambda: "all"),
+                "2": (" Clear Old History (>30 days)", lambda: "old"),
+                "3": (" Clear Failed Downloads Only", lambda: "failed"),
+                "4": (" Clear Statistics Only", lambda: "stats"),
                 "0": ("← Cancel", lambda: "cancel"),
             }
             
@@ -4019,10 +4014,10 @@ Download multiple videos with advanced queue management and processing options.
                 self.renderer.show_info(f"  • Cleanup Days: {self.settings.history.cleanup_days}")
                 
                 options = {
-                    "1": ("📊 Set Max Entries", self._set_max_history_entries),
-                    "2": ("🧹 Auto Cleanup Settings", self._handle_auto_cleanup_settings),
-                    "3": ("📅 Cleanup Interval", self._set_cleanup_interval),
-                    "4": ("💾 Storage Settings", self._handle_history_storage_settings),
+                    "1": (" Set Max Entries", self._set_max_history_entries),
+                    "2": (" Auto Cleanup Settings", self._handle_auto_cleanup_settings),
+                    "3": (" Cleanup Interval", self._set_cleanup_interval),
+                    "4": (" Storage Settings", self._handle_history_storage_settings),
                     "0": ("← Back", lambda: None),
                 }
                 
@@ -4107,10 +4102,10 @@ Download multiple videos with advanced queue management and processing options.
             self.renderer.show_info("  • Backup is created automatically")
             
             options = {
-                "1": ("📁 Change Storage Location", self._change_history_storage_location),
-                "2": ("💾 Create Backup", self._create_history_backup),
-                "3": ("🔄 Restore from Backup", self._restore_history_backup),
-                "4": ("📊 Storage Info", self._show_history_storage_info),
+                "1": (" Change Storage Location", self._change_history_storage_location),
+                "2": (" Create Backup", self._create_history_backup),
+                "3": (" Restore from Backup", self._restore_history_backup),
+                "4": (" Storage Info", self._show_history_storage_info),
                 "0": ("← Back", lambda: None),
             }
             
@@ -4170,11 +4165,11 @@ Download multiple videos with advanced queue management and processing options.
             info_text = f"""
             [bold]History Storage Information:[/bold]
             
-            📁 Location: {storage_info.get('location', 'Unknown')}
-            📊 Total Entries: {storage_info.get('total_entries', 0)}
-            💾 File Size: {storage_info.get('file_size_mb', 0):.2f} MB
-            📅 Last Modified: {storage_info.get('last_modified', 'Unknown')}
-            🔄 Auto Backup: {'Yes' if storage_info.get('auto_backup', False) else 'No'}
+             Location: {storage_info.get('location', 'Unknown')}
+             Total Entries: {storage_info.get('total_entries', 0)}
+             File Size: {storage_info.get('file_size_mb', 0):.2f} MB
+             Last Modified: {storage_info.get('last_modified', 'Unknown')}
+             Auto Backup: {'Yes' if storage_info.get('auto_backup', False) else 'No'}
             """
             
             self.renderer.show_info(info_text)
@@ -4235,8 +4230,8 @@ Download multiple videos with advanced queue management and processing options.
             
             # Show options for results
             options = {
-                "1": ("📤 Export Results", lambda: self._export_search_results(results)),
-                "2": ("🔍 Refine Search", lambda: self._handle_enhanced_search_history()),
+                "1": (" Export Results", lambda: self._export_search_results(results)),
+                "2": (" Refine Search", lambda: self._handle_enhanced_search_history()),
                 "0": ("← Back", lambda: None),
             }
             
@@ -4250,8 +4245,8 @@ Download multiple videos with advanced queue management and processing options.
         """Export search results."""
         try:
             export_options = {
-                "1": ("📄 Export as CSV", lambda: self._export_results_csv(results)),
-                "2": ("📊 Export as JSON", lambda: self._export_results_json(results)),
+                "1": (" Export as CSV", lambda: self._export_results_csv(results)),
+                "2": (" Export as JSON", lambda: self._export_results_json(results)),
                 "0": ("← Back", lambda: None),
             }
             
@@ -4692,44 +4687,77 @@ Download multiple videos with advanced queue management and processing options.
         self.renderer.show_pause()
     
     def _show_keyboard_shortcuts(self) -> None:
-        """Show keyboard shortcuts help."""
-        help_text = """
-        [bold]Keyboard Shortcuts[/bold]
+        """Show comprehensive keyboard shortcuts guide."""
+        shortcuts_text = """
+        [bold]VideoMilker Keyboard Shortcuts[/bold]
         
-        [bold]Navigation:[/bold]
-        • 0, b, B - Go back to previous menu
-        • q, Q - Quit application
-        • ESC - Go back (alternative)
+        [bold green]Global Navigation Shortcuts:[/bold green]
+        • [bold]0, b, B[/bold] - Go Back to previous menu
+        • [bold]q, Q[/bold] - Quit application
+        • [bold]?[/bold] - Show this help (keyboard shortcuts)
+        • [bold]ESC[/bold] - Go back (alternative)
         
-        [bold]Menu Shortcuts:[/bold]
-        • d, D - Quick Download
-        • a, A - Audio-Only Download
-        • c, C - Chapter Split Download
-        • b, B - Batch Download
-        • r, R - Resume Downloads
-        • f, F - File Management
-        • s, S - Options & Settings
-        • i, I - Download History
-        • h, H - Help & Information
-        • ? - Help (alternative)
+        [bold green]Direct Menu Access:[/bold green]
+        • [bold]d, D[/bold] - Quick Download
+        • [bold]a, A[/bold] - Audio-Only Download
+        • [bold]c, C[/bold] - Chapter Split Download
+        • [bold]b, B[/bold] - Batch Download
+        • [bold]r, R[/bold] - Resume Interrupted Downloads
+        • [bold]f, F[/bold] - File Management
+        • [bold]s, S[/bold] - Options & Settings
+        • [bold]i, I[/bold] - Download History
+        • [bold]h, H[/bold] - Help & Info
         
-        [bold]General:[/bold]
-        • Enter - Confirm/Select
-        • Ctrl+C - Cancel operation
-        • Arrow keys - Navigate options
-        • Tab - Auto-complete (where available)
+        [bold green]General Navigation:[/bold green]
+        • [bold]Arrow Keys[/bold] - Navigate menu options
+        • [bold]Enter[/bold] - Select/confirm option
+        • [bold]Tab[/bold] - Auto-complete where available
+        • [bold]Ctrl+C[/bold] - Cancel current operation
         
-        [bold]Tips:[/bold]
-        • Shortcuts work from any menu
-        • Use shortcuts for faster navigation
-        • Ctrl+C always cancels current operation
-        • 0 always goes back to previous menu
+        [bold green]Input & Editing:[/bold green]
+        • [bold]Ctrl+D[/bold] - Finish URL input (batch mode)
+        • [bold]Ctrl+U[/bold] - Clear current input
+        • [bold]Ctrl+W[/bold] - Delete word backward
+        • [bold]Ctrl+K[/bold] - Delete to end of line
+        
+        [bold green]Download Controls:[/bold green]
+        • [bold]p[/bold] - Pause batch processing
+        • [bold]s[/bold] - Skip current download (batch mode)
+        • [bold]r[/bold] - Resume paused downloads
+        • [bold]c[/bold] - Cancel current download
+        
+        [bold green]File Management:[/bold green]
+        • [bold]d[/bold] - Delete selected files
+        • [bold]o[/bold] - Organize files by type
+        • [bold]c[/bold] - Clean up empty folders
+        • [bold]a[/bold] - Analyze storage usage
+        
+        [bold green]History & Search:[/bold green]
+        • [bold]f[/bold] - Find in history
+        • [bold]n[/bold] - Next search result
+        • [bold]p[/bold] - Previous search result
+        • [bold]e[/bold] - Export history
+        
+        [bold green]Configuration:[/bold green]
+        • [bold]v[/bold] - View current settings
+        • [bold]e[/bold] - Export configuration
+        • [bold]i[/bold] - Import configuration
+        • [bold]r[/bold] - Reset to defaults
+        
+        [bold green]Help & Information:[/bold green]
+        • [bold]1-8[/bold] - Navigate help sections
+        • [bold]g[/bold] - General help
+        • [bold]t[/bold] - Troubleshooting
+        • [bold]a[/bold] - About VideoMilker
+        
+        [bold yellow]Tip:[/bold yellow] Most shortcuts work from any menu level. 
+        Use [bold]?[/bold] anytime to see this help, or [bold]0[/bold] to go back.
         """
         
         panel = Panel(
-            help_text,
-            title="[bold red]Keyboard Shortcuts[/bold red]",
-            border_style="red",
+            shortcuts_text,
+            title="[bold green]Keyboard Shortcuts[/bold green]",
+            border_style="green",
             box=ROUNDED
         )
         self.console.print(panel)

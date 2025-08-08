@@ -162,6 +162,23 @@ class TestEnhancedMenuSystem:
         # Test unknown shortcut
         assert menu_system._handle_global_shortcuts("x") is False
     
+    def test_question_mark_shortcut(self, menu_system):
+        """Test that ? key shows keyboard shortcuts directly."""
+        # Mock both methods
+        with patch.object(menu_system, '_show_keyboard_shortcuts') as mock_show_shortcuts, \
+             patch.object(menu_system, '_handle_help') as mock_handle_help:
+            # Test that ? key calls _show_keyboard_shortcuts
+            result = menu_system._handle_global_shortcuts("?")
+            
+            # Should return True (shortcut was handled)
+            assert result is True
+            
+            # Should have called _show_keyboard_shortcuts
+            mock_show_shortcuts.assert_called_once()
+            
+            # Should NOT have called _handle_help (which navigates to help menu)
+            mock_handle_help.assert_not_called()
+    
     def test_menu_handlers(self, menu_system):
         """Test menu handler functions."""
         # Test that handlers use navigation system
@@ -288,7 +305,7 @@ class TestEnhancedMenuSystem:
         # Test that show_menu is called with extra_info
         call_args = menu_system.renderer.show_menu.call_args
         assert "extra_info" in call_args[1]
-        assert "Global Shortcuts" in call_args[1]["extra_info"]
+        assert "Press ? for keyboard shortcuts" in call_args[1]["extra_info"]
     
     def test_error_handling(self, menu_system):
         """Test error handling in menu system."""
