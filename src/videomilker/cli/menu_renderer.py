@@ -50,7 +50,8 @@ class MenuRenderer:
         self.console.print()
     
     def show_menu(self, title: str, options: Dict[str, Tuple[str, Any]], 
-                  back_option: bool = True, show_shortcuts: bool = True) -> str:
+                  back_option: bool = True, show_shortcuts: bool = True, 
+                  extra_info: str = None) -> str:
         """Display a menu with options and return the user's choice."""
         # Create menu panel
         menu_content = []
@@ -65,6 +66,10 @@ class MenuRenderer:
         
         if back_option and "0" not in options:
             menu_content.append(f"[dim]0[/dim] - ← Back")
+        
+        # Add extra info if provided
+        if extra_info:
+            menu_content.append(extra_info)
         
         # Add keyboard shortcuts info if enabled
         if show_shortcuts:

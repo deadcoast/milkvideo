@@ -91,7 +91,7 @@ python -m videomilker --download-path /custom/download/path
 
 When you start VideoMilker, you'll see the main menu:
 
-```
+```bash
 VideoMilker v1.0
 ┌─────────────────────────────────────────┐
 │           Welcome to VideoMilker!       │
@@ -99,12 +99,24 @@ VideoMilker v1.0
 │                                         │
 │  [1] Quick Download                     │
 │  [2] Batch Download                     │
-│  [3] Options & Settings                 │
-│  [4] Download History                   │
-│  [5] Help & Info                        │
+│  [3] Queue Management                   │
+│  [4] Audio Download (Ctrl+A)            │
+│  [5] Chapter Download (Ctrl+C)          │
+│  [6] Options & Settings                 │
+│  [7] Download History                   │
+│  [8] File Management (Ctrl+F)           │
+│  [9] Help & Info                        │
 │                                         │
 │  [q] Quit Application                   │
 └─────────────────────────────────────────┘
+
+Global Shortcuts:
+• Ctrl+Q: Quick Download
+• Ctrl+B: Batch Download
+• Ctrl+A: Audio Download
+• Ctrl+C: Chapter Download
+• Ctrl+H: History
+• Ctrl+F: File Management
 ```
 
 ### 1. Quick Download
@@ -112,9 +124,17 @@ VideoMilker v1.0
 Select option `1` for single video downloads:
 
 1. Enter the video URL when prompted
-2. Choose download options (quality, format)
-3. Confirm download
-4. Monitor progress
+2. Choose download options (quality, format) with preview
+3. Enable auto-download for future downloads (optional)
+4. Confirm download or select 'auto' for immediate download
+5. Monitor progress with detailed speed and ETA information
+
+**Features:**
+
+- Format preview and selection before download
+- Auto-download option (saves preference permanently)
+- Real-time progress with speed and ETA
+- Download resume for interrupted downloads
 
 ### 2. Batch Download
 
@@ -125,28 +145,80 @@ Select option `2` for multiple video downloads:
    - Load from batch file
    - Browse for batch file
 2. Add URLs to the queue
-3. Start batch download
-4. Monitor progress for all downloads
+3. Configure concurrent download limits
+4. Start batch download with pause/resume capability
+5. Monitor progress for all downloads
 
-### 3. Options & Settings
+**Features:**
 
-Select option `3` to configure VideoMilker:
+- Concurrent download limits with threading
+- Memory optimization for large batches
+- Progress tracking for individual and overall batch
+- Download resume for interrupted downloads
+- Chunked processing for better performance
 
-- **Download Path Settings**: Set custom download location
+### 3. Queue Management
+
+Select option `3` to manage download queues:
+
+- **Add/Load URLs**: Add individual URLs or load from batch files
+- **Pause/Resume/Stop Processing**: Control queue execution
+- **View Queue Progress**: Monitor active downloads
+- **View Download Results**: Check completed and failed downloads
+- **Clear Queue**: Remove all pending downloads
+
+### 4. Audio Download
+
+Select option `4` for audio-only downloads:
+
+- **Audio Format Selection**: Choose from M4A, MP3, OPUS, AAC, FLAC
+- **Quality Settings**: Configure audio bitrate and quality
+- **Batch Audio Processing**: Download multiple audio files with concurrency
+- **Format Preview**: Preview available audio formats before download
+
+### 5. Chapter Download
+
+Select option `5` for videos with chapter information:
+
+- **Chapter Preview**: View available chapters before download
+- **Chapter Selection**: Choose specific chapters to download
+- **Split by Chapters**: Download each chapter as separate file
+- **Chapter Metadata**: Embed chapter information in files
+
+### 6. Options & Settings
+
+Select option `6` to configure VideoMilker:
+
+- **Download Path Settings**: Set custom download location with folder browser
 - **Audio/Video Format Settings**: Configure quality and format preferences
 - **File Organization Settings**: Set up folder structure and naming
+- **Performance Settings**: Configure concurrent download limits
+- **Configuration Management**: Export/import, validate, and auto-fix settings
+- **Configuration Wizard**: First-time setup guide
 - **Advanced yt-dlp Options**: Configure advanced download options
 - **View/Edit Config Files**: Direct access to configuration files
 - **Reset to Defaults**: Restore default settings
 
-### 4. Download History
+### 7. Download History
 
-Select option `4` to view your download history:
+Select option `7` to view your download history:
 
-- View recent downloads
-- Search download history
-- Clear history
-- Export download logs
+- **View Recent Downloads**: See latest download activity
+- **Advanced Search**: Search by title, URL, date, or status
+- **Filter by Date Range**: View downloads from specific periods
+- **Export History**: Export download logs in various formats
+- **Clear History**: Remove old download records
+- **Statistics**: View download statistics and trends
+
+### 8. File Management
+
+Select option `8` for file management and cleanup:
+
+- **Duplicate Detection**: Find duplicate files using hash-based, name/size-based, or similar file algorithms
+- **File Cleanup**: Remove large files, old files, or empty folders
+- **Storage Analysis**: Analyze disk usage and get recommendations
+- **Organize Files**: Sort files by type into organized folders
+- **Remove Duplicates**: Choose strategy (keep newest, oldest, largest, smallest)
 
 ## Advanced Features
 
@@ -154,7 +226,7 @@ Select option `4` to view your download history:
 
 VideoMilker automatically organizes downloads:
 
-```
+```plaintext
 Downloads/
 └── VideoMilker/
     ├── 01/  # January 1st downloads
@@ -187,7 +259,7 @@ Available placeholders:
 
 Real-time progress display:
 
-```
+```bash
 Downloading: Video Title Here
 ┌─────────────────────────────────────────┐
 │  Progress: ████████████░░░░░░░  67%     │
@@ -204,7 +276,7 @@ Downloading: Video Title Here
 
 Monitor multiple downloads:
 
-```
+```bash
 Batch Download Progress
 ┌─────────────────────────────────────────┐
 │  Overall: ██████░░░░░░░░░░░░░░░  3/8    │
@@ -392,6 +464,15 @@ When reporting issues, include:
 
 ## Keyboard Shortcuts
 
+### Global Shortcuts (Available from Main Menu)
+
+- **Ctrl+Q**: Quick Download
+- **Ctrl+B**: Batch Download
+- **Ctrl+A**: Audio Download
+- **Ctrl+C**: Chapter Download
+- **Ctrl+H**: Download History
+- **Ctrl+F**: File Management
+
 ### Navigation
 
 - **Arrow Keys**: Navigate menu options
@@ -404,13 +485,21 @@ When reporting issues, include:
 - **Ctrl+C**: Cancel current download
 - **p**: Pause batch processing
 - **s**: Skip current download in batch
-- **q**: Quit application
+- **r**: Resume paused downloads
+- **q**: Quit application (with confirmation for active downloads)
 
 ### Input
 
 - **Tab**: Auto-complete where applicable
 - **Ctrl+D**: Finish URL input (batch mode)
 - **Ctrl+C**: Cancel input
+
+### File Management
+
+- **d**: Delete selected files
+- **o**: Organize files by type
+- **c**: Clean up empty folders
+- **a**: Analyze storage usage
 
 ## Examples
 
@@ -447,10 +536,100 @@ python -m videomilker --download-path /Volumes/External/Downloads
 python -m videomilker --config /path/to/custom_config.json
 ```
 
+### Audio-Only Download
+
+```bash
+# Interactive mode
+python -m videomilker
+# Select "Audio Download" → Choose format (M4A, MP3, etc.) → Enter URL
+
+# Quick audio download (using best audio format)
+python -m videomilker --link "https://youtube.com/watch?v=..." --audio
+```
+
+### Chapter Download
+
+```bash
+# Interactive mode
+python -m videomilker
+# Select "Chapter Download" → Preview chapters → Select chapters → Download
+
+# For videos with chapters, use chapter splitting
+python -m videomilker --link "https://youtube.com/watch?v=..." --split-chapters
+```
+
+### File Management Operations
+
+```bash
+# Interactive mode for file management
+python -m videomilker
+# Select "File Management" → Choose operation:
+# - Find duplicates
+# - Clean up large/old files
+# - Organize files by type
+# - Analyze storage usage
+```
+
+### Configuration Management
+
+```bash
+# Export current configuration
+python -m videomilker
+# Select "Options & Settings" → "Configuration Management" → "Export Configuration"
+
+# Import configuration from backup
+python -m videomilker
+# Select "Options & Settings" → "Configuration Management" → "Import Configuration"
+
+# Run configuration wizard for first-time setup
+python -m videomilker
+# Select "Options & Settings" → "Configuration Management" → "Run Configuration Wizard"
+```
+
 ### Verbose Mode for Debugging
 
 ```bash
 python -m videomilker --verbose --link "https://youtube.com/watch?v=..."
 ```
+
+## New Features Guide
+
+### Auto-Download Mode
+
+Enable auto-download to skip confirmation dialogs:
+
+1. Go to Quick Download
+2. Enter a URL
+3. When prompted for confirmation, type 'auto'
+4. This permanently enables auto-download for future downloads
+
+### Queue Management
+
+Manage multiple downloads efficiently:
+
+1. Add URLs to queue via "Queue Management" menu
+2. Configure concurrent download limits in "Performance Settings"
+3. Use pause/resume/stop controls during processing
+4. Monitor individual download progress
+
+### Duplicate Detection
+
+Keep your downloads organized:
+
+1. Use "File Management" → "Find Duplicates"
+2. Choose detection method:
+   - Hash-based (most accurate)
+   - Name and size based (faster)
+   - Similar files (fuzzy matching)
+3. Select removal strategy (newest, oldest, largest, smallest)
+
+### Storage Analysis
+
+Monitor disk usage:
+
+1. Go to "File Management" → "Analyze Storage"
+2. View breakdown by file type and size
+3. Get recommendations for cleanup
+4. Identify large files and old downloads
 
 This user guide covers all the essential features and usage patterns for VideoMilker. For more detailed information, refer to the [API Reference](api-reference.md) or [Project Architecture](project-architecture.md) documentation.

@@ -79,7 +79,7 @@ def main(config: str = None, verbose: bool = False, download_path: str = None, l
             if fixes_applied:
                 console.print("[green]Auto-fixed configuration issues:[/green]")
                 for fix in fixes:
-                    console.print(f"[green]  ✓ {fix}[/green]")
+                    console.print(f"[green]   {fix}[/green]")
                 
                 # Re-validate after fixes
                 is_valid, remaining_errors = config_manager.validate_config(settings)

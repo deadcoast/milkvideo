@@ -190,7 +190,7 @@ class ProgressTracker:
             return Panel("Download not found", title="Progress", border_style="red")
         
         # Progress bar
-        progress_bar = "█" * int(download.progress / 5) + "░" * (20 - int(download.progress / 5))
+        progress_bar = "" * int(download.progress / 5) + "" * (20 - int(download.progress / 5))
         
         # Speed and ETA
         speed_text = f"{download.speed_mbps:.2f} MB/s" if download.speed > 0 else "Calculating..."

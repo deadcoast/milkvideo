@@ -35,11 +35,19 @@ VideoMilker is an intuitive, tree-structured CLI interface for yt-dlp that elimi
 
 - **Rich Terminal UI**: Beautiful, interactive interface with progress bars and colorized output
 - **Click-based CLI**: Command-line interface with options for direct downloads
-- **Batch Processing**: Download multiple videos with queue management
-- **Smart File Organization**: Automatic day-based folder structure
-- **Configuration Management**: Type-safe settings with Pydantic models
-- **Download History**: Track and manage download history
-- **Error Handling**: Comprehensive error handling with user-friendly messages
+- **Batch Processing**: Download multiple videos with queue management and pause/resume
+- **Smart File Organization**: Automatic day-based folder structure with duplicate detection
+- **Configuration Management**: Type-safe settings with Pydantic models, validation, and auto-fix
+- **Download History**: Track and manage download history with advanced search
+- **Error Handling**: Comprehensive error handling with user-friendly messages and suggestions
+- **Audio Downloads**: Audio-only downloads with multiple format support
+- **Chapter Splitting**: Download videos with chapter extraction and preview
+- **Format Selection**: Preview and select video/audio formats before download
+- **File Management**: Duplicate detection, cleanup utilities, and storage analysis
+- **Keyboard Shortcuts**: Quick access to common actions and global shortcuts
+- **Queue Management**: Advanced download queue with pause/resume/stop functionality
+- **Download Resume**: Resume interrupted downloads automatically
+- **Configuration Tools**: Export/import settings, validation, and first-time setup wizard
 
 ### Technology Stack
 
@@ -80,22 +88,36 @@ python -m videomilker --config /path/to/config.json --verbose
 
 ### ✅ Completed Features
 
-- Rich-based terminal UI with menu system
-- Click CLI with command-line options
-- yt-dlp integration for video downloading
-- Configuration management with JSON files
-- Download history tracking
-- Batch download processing
-- Progress tracking and display
-- File organization and naming
-- Error handling and recovery
-- Type-safe configuration with Pydantic
+- Rich-based terminal UI with menu system and keyboard shortcuts
+- Click CLI with command-line options and direct download support
+- yt-dlp integration for video downloading with format selection
+- Configuration management with JSON files, validation, and auto-fix
+- Download history tracking with advanced search functionality
+- Batch download processing with queue management and pause/resume
+- Progress tracking and display with detailed speed and ETA information
+- File organization and naming with day-based folders
+- Error handling and recovery with user-friendly messages
+- Type-safe configuration with Pydantic models
+- Auto-download option with permanent setting capability
+- Enhanced download path configuration with folder browser
+- Format preview and selection before download
+- Configuration export/import functionality
+- Configuration wizard for first-time users
+- Confirmation dialogs for destructive actions
+- Audio-only download option with multiple format support
+- Chapter splitting functionality with preview
+- Concurrent download limits with threading support
+- Memory optimization for large batch downloads
+- Download resume for interrupted downloads
+- Duplicate detection with multiple algorithms (hash-based, name/size-based, similar files)
+- Comprehensive file cleanup utilities (large files, old files, empty folders)
+- Storage analysis and recommendations
+- File organization by type with extension-based sorting
 
 ### 🚧 In Development
 
-- Enhanced batch processing features
-- Additional UI themes and customization
-- Advanced format selection options
+- Additional UI themes and customization options
+- Advanced format selection interface improvements
 - Plugin system for extensibility
 
 ### 📋 Planned Features

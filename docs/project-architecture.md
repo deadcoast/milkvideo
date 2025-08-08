@@ -16,7 +16,7 @@ An intuitive, tree-structured CLI interface for yt-dlp that eliminates complex c
 
 ### Main Menu Structure
 
-```
+```bash
 VideoMilker v1.0
 ┌─────────────────────────────────────────┐
 │           Welcome to VideoMilker!       │
@@ -24,17 +24,26 @@ VideoMilker v1.0
 │                                         │
 │  [1] Quick Download                     │
 │  [2] Batch Download                     │
-│  [3] Options & Settings                 │
-│  [4] Download History                   │
-│  [5] Help & Info                        │
+│  [3] Queue Management                   │
+│  [4] Audio Download (Ctrl+A)            │
+│  [5] Chapter Download (Ctrl+C)          │
+│  [6] Options & Settings                 │
+│  [7] Download History                   │
+│  [8] File Management (Ctrl+F)           │
+│  [9] Help & Info                        │
 │                                         │
 │  [q] Quit Application                   │
 └─────────────────────────────────────────┘
+
+Global Shortcuts:
+• Ctrl+Q: Quick Download  • Ctrl+B: Batch Download
+• Ctrl+A: Audio Download  • Ctrl+C: Chapter Download
+• Ctrl+H: History         • Ctrl+F: File Management
 ```
 
 ### 1. Quick Download Menu
 
-```
+```bash
 Quick Download
 ┌─────────────────────────────────────────┐
 │  Enter video URL below:                 │
@@ -52,7 +61,7 @@ Quick Download
 
 ### 2. Batch Download Menu
 
-```
+```bash
 Batch Download
 ┌─────────────────────────────────────────┐
 │  Choose batch download method:          │
@@ -68,7 +77,7 @@ Batch Download
 
 #### 2.1 Direct URL Input
 
-```
+```bash
 Batch Download - Direct Input
 ┌─────────────────────────────────────────┐
 │  Paste URLs (one per line, Ctrl+D to    │
@@ -89,7 +98,7 @@ Batch Download - Direct Input
 
 ### 3. Options & Settings Menu
 
-```
+```bash
 Options & Settings
 ┌─────────────────────────────────────────┐
 │  Configure VideoMilker settings:        │
@@ -108,7 +117,7 @@ Options & Settings
 
 #### 3.1 Download Path Settings
 
-```
+```bash
 Download Path Settings
 ┌─────────────────────────────────────────┐
 │  Current Path: /Users/name/Downloads    │
@@ -130,7 +139,7 @@ Download Path Settings
 
 ### 4. Download History Menu
 
-```
+```bash
 Download History
 ┌─────────────────────────────────────────┐
 │  Recent Downloads:                      │
@@ -155,7 +164,7 @@ Download History
 
 ### Directory Structure
 
-```
+```plaintext
 Downloads/
 └── VideoMilker/
     ├── 01/  # January 1st downloads
@@ -181,7 +190,7 @@ Downloads/
 
 ### Download Progress Display
 
-```
+```bash
 Downloading: Video Title Here
 ┌─────────────────────────────────────────┐
 │  Progress: ████████████░░░░░░░  67%     │
@@ -196,7 +205,7 @@ Downloading: Video Title Here
 
 ### Batch Progress Display
 
-```
+```bash
 Batch Download Progress
 ┌─────────────────────────────────────────┐
 │  Overall: ██████░░░░░░░░░░░░░░░  3/8    │
@@ -215,7 +224,7 @@ Batch Download Progress
 
 ### Error Display Format
 
-```
+```bash
 Download Error
 ┌─────────────────────────────────────────┐
 │  Error: Video unavailable or private    │
@@ -315,13 +324,20 @@ def log_download(url: str, filename: str, size: int, status: str):
 
 ### Quality of Life Features
 
-1. **Auto-detection**: Recognize video platforms and suggest optimal settings
-2. **Resume Downloads**: Continue interrupted downloads
-3. **Duplicate Detection**: Warn about already downloaded videos
-4. **Format Preview**: Show available formats before download
-5. **Keyboard Shortcuts**: Quick access to common actions
-6. **Search History**: Recent URLs for easy re-download
-7. **Export Options**: Save download lists for later use
+1. **Auto-detection**: Recognize video platforms and suggest optimal settings ✅
+2. **Resume Downloads**: Continue interrupted downloads ✅
+3. **Duplicate Detection**: Warn about already downloaded videos ✅
+4. **Format Preview**: Show available formats before download ✅
+5. **Keyboard Shortcuts**: Quick access to common actions ✅
+6. **Search History**: Recent URLs for easy re-download ✅
+7. **Export Options**: Save download lists for later use ✅
+8. **Auto-Download Mode**: Skip confirmation dialogs permanently ✅
+9. **Queue Management**: Pause/resume/stop download queues ✅
+10. **Audio-Only Downloads**: Extract audio with format selection ✅
+11. **Chapter Splitting**: Download videos with chapter extraction ✅
+12. **File Management**: Organize and clean up download directories ✅
+13. **Configuration Tools**: Export/import settings with validation ✅
+14. **Storage Analysis**: Monitor disk usage and get recommendations ✅
 
 ### Accessibility Considerations
 
@@ -335,22 +351,121 @@ def log_download(url: str, filename: str, size: int, status: str):
 
 ### Core Functionality Tests
 
-- [ ] Single video download with progress tracking
-- [ ] Batch download with mixed success/failure
-- [ ] Folder creation and organization
-- [ ] Config file read/write operations
-- [ ] Error handling and recovery
-- [ ] Menu navigation and state management
-- [ ] History logging and retrieval
+- [x] Single video download with progress tracking
+- [x] Batch download with mixed success/failure
+- [x] Folder creation and organization
+- [x] Config file read/write operations
+- [x] Error handling and recovery
+- [x] Menu navigation and state management
+- [x] History logging and retrieval
+- [x] Audio-only downloads with format selection
+- [x] Chapter splitting and extraction
+- [x] Queue management with pause/resume
+- [x] Duplicate detection and file cleanup
+- [x] Configuration validation and auto-fix
+- [x] File organization and storage analysis
 
 ### Edge Cases
 
-- [ ] Invalid URLs handling
-- [ ] Network interruption recovery
-- [ ] Disk space warnings
-- [ ] Permission errors
-- [ ] Large batch file processing
-- [ ] Special characters in video titles
-- [ ] Concurrent download limits
+- [x] Invalid URLs handling
+- [x] Network interruption recovery
+- [x] Disk space warnings
+- [x] Permission errors
+- [x] Large batch file processing
+- [x] Special characters in video titles
+- [x] Concurrent download limits
+- [x] Memory optimization for large batches
+- [x] Download resume after interruption
+- [x] Configuration file corruption handling
+- [x] User-friendly error messages with suggestions
+
+## New Architecture Components
+
+### Queue Management System
+
+The `DownloadQueue` class provides thread-safe queue management for batch operations:
+
+- **Thread Safety**: Uses `threading.Lock` for concurrent access
+- **State Management**: Tracks queue status (paused, stopped, processing)
+- **Progress Tracking**: Monitors individual and overall progress
+- **Memory Efficiency**: Processes items in chunks to manage memory usage
+
+### File Management System
+
+Enhanced file operations with intelligent organization:
+
+- **Duplicate Detection**: Multiple algorithms (hash-based, name/size, similarity)
+- **Storage Analysis**: Disk usage monitoring with recommendations
+- **Cleanup Utilities**: Automated removal of large/old files and empty folders
+- **Organization**: Type-based file sorting and folder structure
+
+### Configuration System
+
+Configuration system with validation and auto-fix:
+
+- **Validation Engine**: Comprehensive setting validation on startup
+- **Auto-Fix**: Automatic correction of common configuration issues
+- **Export/Import**: Backup and restore configuration with metadata
+- **Migration**: Version-aware configuration migration
+- **Wizard**: First-time user setup guide
+
+### Error Handling Framework
+
+User-friendly error management system:
+
+- **Error Mapping**: Translates technical yt-dlp errors to user-friendly messages
+- **Context Enrichment**: Adds helpful context and suggestions to errors
+- **Display Formatting**: Rich formatting for error presentation
+- **Recovery Suggestions**: Actionable suggestions for error resolution
+
+### Enhanced Progress System
+
+Detailed progress tracking and display:
+
+- **Real-time Metrics**: Speed, ETA, and detailed progress information
+- **Batch Progress**: Individual and overall batch progress tracking
+- **Memory Monitoring**: Track memory usage during large batch operations
+- **Resume Support**: Seamless continuation of interrupted downloads
+
+### Audio Processing Pipeline
+
+Specialized audio download and processing:
+
+- **Format Selection**: Multiple audio format support (M4A, MP3, OPUS, AAC, FLAC)
+- **Quality Configuration**: Bitrate and quality settings
+- **Batch Processing**: Concurrent audio processing with limits
+- **Metadata Preservation**: Maintain audio metadata and tags
+
+### Chapter Management System
+
+Video chapter extraction and processing:
+
+- **Chapter Detection**: Automatic chapter information extraction
+- **Preview Interface**: User-friendly chapter preview and selection
+- **Split Processing**: Download individual chapters as separate files
+- **Metadata Integration**: Embed chapter information in output files
+
+## Performance Optimizations
+
+### Memory Management
+
+- **Chunked Processing**: Process large batches in memory-efficient chunks
+- **Garbage Collection**: Explicit memory cleanup after operations
+- **Memory Monitoring**: Track and log memory usage patterns
+- **Resource Limits**: Configurable concurrent download limits
+
+### Threading Architecture
+
+- **Thread Pool**: Managed thread pool for concurrent downloads
+- **Thread Safety**: All shared resources protected with appropriate locks
+- **Graceful Shutdown**: Clean termination of active threads
+- **Error Isolation**: Thread-level error handling without affecting other operations
+
+### Caching Strategy
+
+- **Configuration Cache**: In-memory configuration caching
+- **Format Cache**: Cache video format information to reduce API calls
+- **History Cache**: Efficient history lookup and search
+- **Metadata Cache**: Cache video metadata for quick access
 
 This enhanced design provides a comprehensive foundation for building an intuitive, robust CLI interface that transforms the complex yt-dlp experience into user-friendly workflows.
