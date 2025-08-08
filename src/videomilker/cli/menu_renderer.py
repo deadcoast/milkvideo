@@ -118,9 +118,15 @@ class MenuRenderer:
         
         # Show the confirmation prompt with auto option
         prompt = f"[{self.theme['highlight_style']}]{message} [y/n/auto] (y):[/{self.theme['highlight_style']}]"
-        
+
         while True:
-            response = self.console.input(prompt).strip().lower()
+            try:
+                response = self.console.input(prompt).strip().lower()
+            except (EOFError, OSError):
+                self.console.print(
+                    f"[{self.theme['warning_style']}]Input unavailable - defaulting to 'yes'.[/{self.theme['warning_style']}]"
+                )
+                return True
             
             if response in ['y', 'yes', '']:
                 self.console.print(f"[{self.theme['success_style']}][ON] - Auto Start Downloads[/{self.theme['success_style']}]")
