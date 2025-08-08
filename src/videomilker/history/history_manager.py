@@ -198,6 +198,105 @@ class HistoryManager:
         except Exception as e:
             raise HistoryError(f"Failed to search downloads: {e}")
     
+    def advanced_search(self, filters: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """Advanced search with multiple filters."""
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                conn.row_factory = sqlite3.Row
+                cursor = conn.cursor()
+                
+                # Build query dynamically
+                query_parts = ["SELECT * FROM downloads WHERE 1=1"]
+                params = []
+                
+                # Title filter
+                if 'title' in filters and filters['title']:
+                    query_parts.append("AND title LIKE ?")
+                    params.append(f"%{filters['title']}%")
+                
+                # Uploader filter
+                if 'uploader' in filters and filters['uploader']:
+                    query_parts.append("AND uploader LIKE ?")
+                    params.append(f"%{filters['uploader']}%")
+                
+                # Status filter
+                if 'status' in filters and filters['status']:
+                    query_parts.append("AND status = ?")
+                    params.append(filters['status'])
+                
+                # Date range filter
+                if 'start_date' in filters and filters['start_date']:
+                    query_parts.append("AND download_date >= ?")
+                    params.append(filters['start_date'].isoformat())
+                
+                if 'end_date' in filters and filters['end_date']:
+                    query_parts.append("AND download_date <= ?")
+                    params.append(filters['end_date'].isoformat())
+                
+                # File size filter
+                if 'min_size' in filters and filters['min_size']:
+                    query_parts.append("AND file_size >= ?")
+                    params.append(filters['min_size'])
+                
+                if 'max_size' in filters and filters['max_size']:
+                    query_parts.append("AND file_size <= ?")
+                    params.append(filters['max_size'])
+                
+                # Duration filter
+                if 'min_duration' in filters and filters['min_duration']:
+                    query_parts.append("AND duration >= ?")
+                    params.append(filters['min_duration'])
+                
+                if 'max_duration' in filters and filters['max_duration']:
+                    query_parts.append("AND duration <= ?")
+                    params.append(filters['max_duration'])
+                
+                # Order by
+                order_by = filters.get('order_by', 'download_date DESC')
+                query_parts.append(f"ORDER BY {order_by}")
+                
+                # Limit
+                if 'limit' in filters and filters['limit']:
+                    query_parts.append("LIMIT ?")
+                    params.append(filters['limit'])
+                
+                query = " ".join(query_parts)
+                cursor.execute(query, params)
+                
+                return [dict(row) for row in cursor.fetchall()]
+                
+        except Exception as e:
+            raise HistoryError(f"Failed to perform advanced search: {e}")
+    
+    def search_suggestions(self, partial_query: str) -> List[str]:
+        """Get search suggestions based on partial query."""
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                
+                search_pattern = f"%{partial_query}%"
+                
+                # Get title suggestions
+                cursor.execute("""
+                    SELECT DISTINCT title FROM downloads 
+                    WHERE title LIKE ? AND title IS NOT NULL
+                    LIMIT 5
+                """, (search_pattern,))
+                title_suggestions = [row[0] for row in cursor.fetchall()]
+                
+                # Get uploader suggestions
+                cursor.execute("""
+                    SELECT DISTINCT uploader FROM downloads 
+                    WHERE uploader LIKE ? AND uploader IS NOT NULL
+                    LIMIT 5
+                """, (search_pattern,))
+                uploader_suggestions = [row[0] for row in cursor.fetchall()]
+                
+                return title_suggestions + uploader_suggestions
+                
+        except Exception as e:
+            raise HistoryError(f"Failed to get search suggestions: {e}")
+    
     def get_downloads_by_status(self, status: str) -> List[Dict[str, Any]]:
         """Get downloads by status."""
         try:

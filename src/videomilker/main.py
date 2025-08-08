@@ -62,6 +62,43 @@ def main(config: str = None, verbose: bool = False, download_path: str = None, l
         # Load configuration
         settings = config_manager.load_config(config_path=config)
         
+        # Validate configuration on startup
+        is_valid, errors = config_manager.validate_config(settings)
+        
+        if not is_valid:
+            console.print("[yellow]Configuration validation found issues:[/yellow]")
+            for error in errors:
+                console.print(f"[red]  • {error}[/red]")
+            
+            # Try to auto-fix configuration issues
+            if verbose:
+                console.print("[cyan]Attempting to auto-fix configuration issues...[/cyan]")
+            
+            fixes_applied, fixes = config_manager.auto_fix_config(settings)
+            
+            if fixes_applied:
+                console.print("[green]Auto-fixed configuration issues:[/green]")
+                for fix in fixes:
+                    console.print(f"[green]  ✓ {fix}[/green]")
+                
+                # Re-validate after fixes
+                is_valid, remaining_errors = config_manager.validate_config(settings)
+                if is_valid:
+                    console.print("[green]Configuration is now valid![/green]")
+                else:
+                    console.print("[yellow]Some configuration issues remain:[/yellow]")
+                    for error in remaining_errors:
+                        console.print(f"[red]  • {error}[/red]")
+            else:
+                console.print("[yellow]Could not auto-fix configuration issues. Please check your settings.[/yellow]")
+            
+            if verbose:
+                console.print("[dim]Press Enter to continue or Ctrl+C to exit...[/dim]")
+                try:
+                    input()
+                except KeyboardInterrupt:
+                    sys.exit(0)
+        
         # Override download path if specified
         if download_path:
             settings.download.path = download_path

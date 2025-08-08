@@ -19,6 +19,25 @@ This document tracks development tasks, improvements, and feature requests for V
 - [x] Command-line options for direct downloads
 - [x] Verbose logging support
 - [x] Custom download path configuration
+- [x] Auto-download option after URL input
+- [x] Enhanced download path configuration with folder browser
+- [x] Download queue management with pause/resume functionality
+- [x] Format preview and selection before download
+- [x] Keyboard shortcuts for common actions
+- [x] Advanced search functionality in history
+- [x] Enhanced download speed and ETA display
+- [x] Configuration validation on startup with auto-fix
+- [x] Configuration export/import functionality
+- [x] Configuration wizard for first-time users
+- [x] User-friendly error messages with suggestions
+- [x] Confirmation dialogs for destructive actions
+- [x] Audio-only download option with multiple format support
+- [x] Concurrent download limits with threading support
+- [x] Chapter splitting functionality with preview
+- [x] Memory optimization for large batch downloads
+- [x] Download resume for interrupted downloads
+- [x] Duplicate detection with multiple algorithms
+- [x] Comprehensive file cleanup utilities
 
 ## 🚧 In Progress
 
@@ -29,54 +48,35 @@ This document tracks development tasks, improvements, and feature requests for V
 
 ## 📋 High Priority
 
-### CLI Enhancements
-
-- [ ] After `Enter video URL ():` prompt, add auto-download option:
-
-  ```plaintext
-  Start download? [y/n/auto] (y):
-  ```
-
-  - `auto`: Enable auto-start downloads permanently
-  - `y`: Start download once
-  - `n`: Cancel download
-
-- [ ] Add custom download path configuration in settings menu
-- [ ] Implement download queue management with pause/resume
-- [ ] Add format preview before download
-
 ### UI Improvements
 
-- [ ] Add keyboard shortcuts for common actions
-- [ ] Implement search functionality in history
-- [ ] Add download speed and ETA display
-- [ ] Create more intuitive error messages
-- [ ] Add confirmation dialogs for destructive actions
+- [x] Create more intuitive error messages
+- [x] Add confirmation dialogs for destructive actions
 
 ### Configuration
 
-- [ ] Add configuration validation on startup
-- [ ] Implement configuration migration for version updates
-- [ ] Add configuration export/import functionality
-- [ ] Create configuration wizard for first-time users
+- [x] Add configuration validation on startup
+- [x] Implement configuration migration for version updates
+- [x] Add configuration export/import functionality
+- [x] Create configuration wizard for first-time users
 
 ## 📋 Medium Priority
 
 ### Advanced Features
 
-- [ ] Audio-only download option
-- [ ] Chapter splitting functionality
+- [x] Audio-only download option
+- [x] Chapter splitting functionality
 
 ### Performance
 
-- [ ] Implement concurrent download limits
-- [ ] Optimize memory usage for large batch downloads
-- [ ] Add download resume for interrupted downloads
+- [x] Implement concurrent download limits
+- [x] Optimize memory usage for large batch downloads
+- [x] Add download resume for interrupted downloads
 
 ### File Management
 
-- [ ] Add duplicate detection
-- [ ] Add file cleanup utilities
+- [x] Add duplicate detection
+- [x] Add file cleanup utilities
 
 ## 📋 Low Priority
 

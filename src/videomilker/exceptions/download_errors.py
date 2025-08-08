@@ -209,4 +209,159 @@ def create_error_with_context(error_class: type[VideoMilkerError], message: str,
     error = error_class(message)
     error.url = url
     error.context = context or {}
-    return error 
+    return error
+
+
+# User-friendly error messages and suggestions
+USER_FRIENDLY_ERRORS = {
+    UnavailableContentError: {
+        "message": "This video is not available for download.",
+        "suggestions": [
+            "The video may have been removed or made private",
+            "Check if the URL is correct",
+            "Try a different video or source"
+        ]
+    },
+    PrivateContentError: {
+        "message": "This video is private and cannot be downloaded.",
+        "suggestions": [
+            "Private videos require authentication",
+            "You may need to log in with appropriate credentials",
+            "Try a public video instead"
+        ]
+    },
+    AgeRestrictionError: {
+        "message": "This video has age restrictions.",
+        "suggestions": [
+            "Age-restricted content requires authentication",
+            "Log in with an account that meets the age requirements",
+            "Try a different video without age restrictions"
+        ]
+    },
+    GeoRestrictionError: {
+        "message": "This video is not available in your region.",
+        "suggestions": [
+            "The content may be geo-blocked in your country",
+            "Try using a VPN (if legal in your region)",
+            "Look for alternative sources of the same content"
+        ]
+    },
+    AuthenticationError: {
+        "message": "Authentication failed. You may need to log in.",
+        "suggestions": [
+            "Check your login credentials",
+            "Ensure your account has access to this content",
+            "Try logging in again or use a different account"
+        ]
+    },
+    RateLimitError: {
+        "message": "Too many requests. Please wait before trying again.",
+        "suggestions": [
+            "Wait a few minutes before trying again",
+            "Reduce the number of concurrent downloads",
+            "Check your internet connection"
+        ]
+    },
+    NetworkError: {
+        "message": "Network connection failed.",
+        "suggestions": [
+            "Check your internet connection",
+            "Try again in a few moments",
+            "Verify the URL is accessible"
+        ]
+    },
+    TimeoutError: {
+        "message": "The download timed out.",
+        "suggestions": [
+            "Check your internet connection speed",
+            "Try downloading during off-peak hours",
+            "Consider downloading a lower quality version"
+        ]
+    },
+    InsufficientSpaceError: {
+        "message": "Not enough disk space for the download.",
+        "suggestions": [
+            "Free up space on your download drive",
+            "Choose a different download location",
+            "Consider downloading a lower quality version"
+        ]
+    },
+    PermissionError: {
+        "message": "Permission denied. Cannot write to the download location.",
+        "suggestions": [
+            "Check folder permissions",
+            "Try a different download location",
+            "Run the application with appropriate permissions"
+        ]
+    },
+    QualityNotAvailableError: {
+        "message": "The requested quality is not available for this video.",
+        "suggestions": [
+            "Try a different quality setting",
+            "Use 'best' quality to get the highest available",
+            "Check what formats are available for this video"
+        ]
+    },
+    FormatError: {
+        "message": "No suitable video format found.",
+        "suggestions": [
+            "The video may not be available in the requested format",
+            "Try downloading audio only",
+            "Check if the video is still available"
+        ]
+    },
+    CorruptedFileError: {
+        "message": "The downloaded file appears to be corrupted.",
+        "suggestions": [
+            "Try downloading again",
+            "Check your internet connection",
+            "Try a different quality setting"
+        ]
+    },
+    CancelledError: {
+        "message": "Download was cancelled.",
+        "suggestions": [
+            "You can restart the download anytime",
+            "Check your settings before trying again"
+        ]
+    }
+}
+
+
+def get_user_friendly_error_message(error: VideoMilkerError) -> dict:
+    """Get user-friendly error message and suggestions for an error."""
+    error_type = type(error)
+    
+    if error_type in USER_FRIENDLY_ERRORS:
+        return USER_FRIENDLY_ERRORS[error_type]
+    
+    # Default error message
+    return {
+        "message": str(error),
+        "suggestions": [
+            "Check the URL and try again",
+            "Verify your internet connection",
+            "Try a different video or source"
+        ]
+    }
+
+
+def format_error_for_display(error: VideoMilkerError) -> str:
+    """Format an error for display in the UI."""
+    friendly_error = get_user_friendly_error_message(error)
+    
+    # Build the error message
+    lines = [
+        f"[bold red]Error:[/bold red] {friendly_error['message']}"
+    ]
+    
+    if hasattr(error, 'url') and error.url:
+        lines.append(f"[dim]URL: {error.url}[/dim]")
+    
+    if friendly_error['suggestions']:
+        lines.append("")
+        lines.append("[bold yellow]Suggestions:[/bold yellow]")
+        for suggestion in friendly_error['suggestions']:
+            lines.append(f"• {suggestion}")
+    
+    return "\n".join(lines) 

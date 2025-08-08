@@ -8,12 +8,17 @@ class ConfigError(VideoMilkerError):
     pass
 
 
-class ConfigFileNotFoundError(ConfigError):
+class ConfigFileError(ConfigError):
+    """Base exception for configuration file errors."""
+    pass
+
+
+class ConfigFileNotFoundError(ConfigFileError):
     """Raised when a configuration file is not found."""
     pass
 
 
-class ConfigFileCorruptedError(ConfigError):
+class ConfigFileCorruptedError(ConfigFileError):
     """Raised when a configuration file is corrupted."""
     pass
 

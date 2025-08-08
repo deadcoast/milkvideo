@@ -88,7 +88,13 @@ class VideoDownloader:
             }
             
         except Exception as e:
-            raise DownloadError(f"Failed to download {url}: {str(e)}")
+            # Map yt-dlp errors to appropriate VideoMilker exceptions
+            from ..exceptions.download_errors import map_yt_dlp_error, create_error_with_context
+            
+            error_message = str(e)
+            error_class = map_yt_dlp_error(error_message)
+            error = create_error_with_context(error_class, error_message, url)
+            raise error
     
     def download_batch(self, urls: List[str], options: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
         """Download multiple videos in batch."""
@@ -122,6 +128,16 @@ class VideoDownloader:
         
         # Add progress hooks
         options['progress_hooks'] = [self._progress_hook]
+        
+        # Add resume options
+        options.update({
+            'continue': True,  # Enable download resume
+            'resume': True,    # Resume partial downloads
+            'fragment_retries': self.settings.download.fragment_retries,
+            'retries': self.settings.download.retries,
+            'retry_sleep': self.settings.download.retry_sleep,
+            'max_sleep_interval': self.settings.download.max_sleep_interval,
+        })
         
         # Add custom options
         if custom_options:
@@ -205,7 +221,13 @@ class VideoDownloader:
                 return ydl.sanitize_info(info)
                 
         except Exception as e:
-            raise DownloadError(f"Failed to get video info for {url}: {str(e)}")
+            # Map yt-dlp errors to appropriate VideoMilker exceptions
+            from ..exceptions.download_errors import map_yt_dlp_error, create_error_with_context
+            
+            error_message = str(e)
+            error_class = map_yt_dlp_error(error_message)
+            error = create_error_with_context(error_class, error_message, url)
+            raise error
     
     def list_formats(self, url: str) -> List[Dict[str, Any]]:
         """List available formats for a video."""
@@ -221,6 +243,180 @@ class VideoDownloader:
                 
         except Exception as e:
             raise FormatError(f"Failed to list formats for {url}: {str(e)}")
+    
+    def get_formatted_formats(self, url: str) -> List[Dict[str, Any]]:
+        """Get formatted list of available formats for easy selection."""
+        try:
+            formats = self.list_formats(url)
+            formatted_formats = []
+            
+            for fmt in formats:
+                format_id = fmt.get('format_id', 'N/A')
+                ext = fmt.get('ext', 'N/A')
+                resolution = fmt.get('resolution', 'N/A')
+                filesize = fmt.get('filesize', 0)
+                fps = fmt.get('fps', 0)
+                vcodec = fmt.get('vcodec', 'none')
+                acodec = fmt.get('acodec', 'none')
+                
+                # Determine format type
+                if vcodec != 'none' and acodec != 'none':
+                    format_type = 'video+audio'
+                elif vcodec != 'none':
+                    format_type = 'video only'
+                elif acodec != 'none':
+                    format_type = 'audio only'
+                else:
+                    format_type = 'unknown'
+                
+                # Format display string
+                if filesize > 0:
+                    size_str = f"{filesize / (1024*1024):.1f}MB"
+                else:
+                    size_str = "Unknown"
+                
+                if fps > 0:
+                    fps_str = f"{fps}fps"
+                else:
+                    fps_str = ""
+                
+                display_name = f"{format_id} - {ext} - {resolution} {fps_str} - {size_str} - {format_type}"
+                
+                formatted_formats.append({
+                    'format_id': format_id,
+                    'display_name': display_name,
+                    'ext': ext,
+                    'resolution': resolution,
+                    'filesize': filesize,
+                    'fps': fps,
+                    'vcodec': vcodec,
+                    'acodec': acodec,
+                    'format_type': format_type,
+                    'original_format': fmt
+                })
+            
+            return formatted_formats
+            
+        except Exception as e:
+            raise FormatError(f"Failed to get formatted formats for {url}: {str(e)}")
+    
+    def get_best_formats(self, url: str) -> Dict[str, Any]:
+        """Get the best available formats for different quality levels."""
+        try:
+            formats = self.list_formats(url)
+            best_formats = {
+                'best': None,
+                'worst': None,
+                'best_video': None,
+                'best_audio': None,
+                '720p': None,
+                '1080p': None,
+                'audio_only': None
+            }
+            
+            for fmt in formats:
+                format_id = fmt.get('format_id', '')
+                resolution = fmt.get('resolution', '')
+                vcodec = fmt.get('vcodec', 'none')
+                acodec = fmt.get('acodec', 'none')
+                filesize = fmt.get('filesize', 0)
+                
+                # Best overall (video + audio)
+                if vcodec != 'none' and acodec != 'none':
+                    if best_formats['best'] is None or filesize > best_formats['best'].get('filesize', 0):
+                        best_formats['best'] = fmt
+                
+                # Worst overall
+                if vcodec != 'none' and acodec != 'none':
+                    if best_formats['worst'] is None or filesize < best_formats['worst'].get('filesize', 0):
+                        best_formats['worst'] = fmt
+                
+                # Best video only
+                if vcodec != 'none' and acodec == 'none':
+                    if best_formats['best_video'] is None or filesize > best_formats['best_video'].get('filesize', 0):
+                        best_formats['best_video'] = fmt
+                
+                # Best audio only
+                if vcodec == 'none' and acodec != 'none':
+                    if best_formats['best_audio'] is None or filesize > best_formats['best_audio'].get('filesize', 0):
+                        best_formats['best_audio'] = fmt
+                
+                # 720p
+                if '720' in resolution and vcodec != 'none':
+                    if best_formats['720p'] is None:
+                        best_formats['720p'] = fmt
+                
+                # 1080p
+                if '1080' in resolution and vcodec != 'none':
+                    if best_formats['1080p'] is None:
+                        best_formats['1080p'] = fmt
+                
+                # Audio only
+                if vcodec == 'none' and acodec != 'none':
+                    if best_formats['audio_only'] is None:
+                        best_formats['audio_only'] = fmt
+            
+            return best_formats
+            
+        except Exception as e:
+            raise FormatError(f"Failed to get best formats for {url}: {str(e)}")
+    
+    def get_chapters(self, url: str) -> List[Dict[str, Any]]:
+        """Get chapter information for a video."""
+        try:
+            # Get video info with chapters
+            video_info = self.get_video_info(url)
+            
+            chapters = video_info.get('chapters', [])
+            
+            if not chapters:
+                return []
+            
+            # Format chapter information
+            formatted_chapters = []
+            for i, chapter in enumerate(chapters, 1):
+                formatted_chapters.append({
+                    'index': i,
+                    'title': chapter.get('title', f'Chapter {i}'),
+                    'start_time': chapter.get('start_time', 0),
+                    'end_time': chapter.get('end_time', 0),
+                    'duration': chapter.get('end_time', 0) - chapter.get('start_time', 0)
+                })
+            
+            return formatted_chapters
+            
+        except Exception as e:
+            raise DownloadError(f"Failed to get chapters for {url}: {str(e)}")
+    
+    def download_with_chapters(self, url: str, options: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """Download a video with chapter splitting enabled."""
+        try:
+            # Prepare options for chapter splitting
+            chapter_options = {
+                'splitchapters': True,
+                'outtmpl': '%(upload_date)s_%(title)s/%(section_number)s-%(section_title)s.%(ext)s'
+            }
+            
+            # Merge with provided options
+            if options:
+                chapter_options.update(options)
+            
+            # Download with chapter splitting
+            result = self.download_single(url, chapter_options)
+            
+            # Add chapter information to result
+            try:
+                chapters = self.get_chapters(url)
+                result['chapters'] = chapters
+                result['chapter_count'] = len(chapters)
+            except Exception:
+                result['chapters'] = []
+                result['chapter_count'] = 0
+            
+            return result
+            
+        except Exception as e:
+            raise DownloadError(f"Failed to download with chapters: {str(e)}")
     
     def validate_url(self, url: str) -> bool:
         """Validate if a URL is supported by yt-dlp."""
@@ -254,6 +450,69 @@ class VideoDownloader:
     def get_download_history(self) -> List[Dict[str, Any]]:
         """Get download history."""
         return [d for d in self.download_queue if d['status'] in ['completed', 'failed', 'cancelled']]
+    
+    def find_interrupted_downloads(self) -> List[Dict[str, Any]]:
+        """Find downloads that were interrupted and can be resumed."""
+        interrupted = []
+        
+        # Check download path for partial files
+        download_path = self.settings.get_download_path()
+        
+        if download_path.exists():
+            for file_path in download_path.rglob('*.part'):
+                # Get file info
+                file_info = {
+                    'filepath': str(file_path),
+                    'filename': file_path.name,
+                    'size': file_path.stat().st_size,
+                    'modified': datetime.fromtimestamp(file_path.stat().st_mtime),
+                    'can_resume': True
+                }
+                interrupted.append(file_info)
+        
+        return interrupted
+    
+    def resume_download(self, filepath: str, url: str = None) -> Dict[str, Any]:
+        """Resume an interrupted download."""
+        try:
+            # Prepare options for resume
+            options = self._prepare_yt_dlp_options()
+            
+            # If URL is provided, use it; otherwise try to extract from filename
+            if not url:
+                # Try to extract URL from filename or metadata
+                # This is a simplified approach - in practice, you might want to store URLs with partial files
+                raise ValueError("URL is required for resume functionality")
+            
+            # Download with resume
+            result = self.download_single(url, options)
+            
+            # Add resume information
+            result['resumed'] = True
+            result['original_filepath'] = filepath
+            
+            return result
+            
+        except Exception as e:
+            raise DownloadError(f"Failed to resume download: {str(e)}")
+    
+    def cleanup_partial_files(self, older_than_days: int = 7) -> List[str]:
+        """Clean up old partial download files."""
+        cleaned_files = []
+        cutoff_time = datetime.now() - timedelta(days=older_than_days)
+        
+        download_path = self.settings.get_download_path()
+        
+        if download_path.exists():
+            for file_path in download_path.rglob('*.part'):
+                if datetime.fromtimestamp(file_path.stat().st_mtime) < cutoff_time:
+                    try:
+                        file_path.unlink()
+                        cleaned_files.append(str(file_path))
+                    except Exception:
+                        pass  # Skip files that can't be deleted
+        
+        return cleaned_files
 
 
 class AsyncVideoDownloader(VideoDownloader):

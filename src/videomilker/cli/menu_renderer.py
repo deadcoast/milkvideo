@@ -50,7 +50,7 @@ class MenuRenderer:
         self.console.print()
     
     def show_menu(self, title: str, options: Dict[str, Tuple[str, Any]], 
-                  back_option: bool = True) -> str:
+                  back_option: bool = True, show_shortcuts: bool = True) -> str:
         """Display a menu with options and return the user's choice."""
         # Create menu panel
         menu_content = []
@@ -65,6 +65,17 @@ class MenuRenderer:
         
         if back_option and "0" not in options:
             menu_content.append(f"[dim]0[/dim] - ← Back")
+        
+        # Add keyboard shortcuts info if enabled
+        if show_shortcuts:
+            shortcuts_info = """
+            [dim]Keyboard Shortcuts:[/dim]
+            [dim]• Arrow keys: Navigate options[/dim]
+            [dim]• Enter: Select option[/dim]
+            [dim]• Ctrl+C: Cancel/Quit[/dim]
+            [dim]• Tab: Auto-complete[/dim]
+            """
+            menu_content.append(shortcuts_info)
         
         menu_text = "\n".join(menu_content)
         
@@ -113,7 +124,7 @@ class MenuRenderer:
     def show_download_confirmation(self, message: str = "Start download?", auto_download: bool = False) -> bool:
         """Display a download confirmation dialog with auto option."""
         if auto_download:
-            self.console.print(f"[{self.theme['success_style']}][ON] - Auto Start Downloads[/{self.theme['success_style']}]")
+            self.console.print(f"[{self.theme['success_style']}]Auto-download enabled - starting download...[/{self.theme['success_style']}]")
             return True
         
         # Show the confirmation prompt with auto option
@@ -123,13 +134,21 @@ class MenuRenderer:
             response = self.console.input(prompt).strip().lower()
             
             if response in ['y', 'yes', '']:
-                self.console.print(f"[{self.theme['success_style']}][ON] - Auto Start Downloads[/{self.theme['success_style']}]")
                 return True
             elif response in ['n', 'no']:
-                self.console.print(f"[{self.theme['warning_style']}][OFF] - Auto Start Downloads[/{self.theme['warning_style']}]")
                 return False
             elif response in ['auto']:
-                self.console.print(f"[{self.theme['success_style']}][ON] - Auto Start Downloads[/{self.theme['success_style']}]")
+                # Enable auto-download permanently
+                if self.settings:
+                    self.settings.ui.auto_download = True
+                    # Save the setting
+                    try:
+                        from ..config.config_manager import ConfigManager
+                        config_manager = ConfigManager()
+                        config_manager.save_config()
+                        self.console.print(f"[{self.theme['success_style']}]Auto-download enabled permanently![/{self.theme['success_style']}]")
+                    except Exception as e:
+                        self.console.print(f"[{self.theme['warning_style']}]Warning: Could not save auto-download setting: {e}[/{self.theme['warning_style']}]")
                 return True
             else:
                 self.console.print(f"[{self.theme['error_style']}]Invalid input. Please enter y, n, or auto.[/{self.theme['error_style']}]")
@@ -195,7 +214,15 @@ class MenuRenderer:
     
     def show_error(self, error: str, details: Optional[str] = None) -> None:
         """Display an error message."""
-        content = f"[{self.theme['error_style']}]{error}[/{self.theme['error_style']}]"
+        # Check if this is a VideoMilker error object
+        if hasattr(error, '__class__') and hasattr(error, '__module__'):
+            if 'videomilker.exceptions' in str(error.__class__.__module__):
+                from ..exceptions.download_errors import format_error_for_display
+                content = format_error_for_display(error)
+            else:
+                content = f"[{self.theme['error_style']}]{error}[/{self.theme['error_style']}]"
+        else:
+            content = f"[{self.theme['error_style']}]{error}[/{self.theme['error_style']}]"
         
         if details:
             content += f"\n\n[dim]{details}[/dim]"

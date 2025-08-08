@@ -157,6 +157,7 @@ class ProgressTracker:
         table.add_column("Progress", style="yellow")
         table.add_column("Speed", style="blue")
         table.add_column("ETA", style="magenta")
+        table.add_column("Size", style="cyan")
         table.add_column("Status", style="red")
         
         for download in self.downloads.values():
@@ -164,16 +165,93 @@ class ProgressTracker:
             speed_text = f"{download.speed_mbps:.2f} MB/s" if download.speed > 0 else "N/A"
             eta_text = str(timedelta(seconds=int(download.eta))) if download.eta else "N/A"
             
+            # Size information
+            if download.size > 0:
+                size_text = f"{download.downloaded_mb:.1f}/{download.size_mb:.1f} MB"
+            else:
+                size_text = "Unknown"
+            
             table.add_row(
                 download.url[:50] + "..." if len(download.url) > 50 else download.url,
                 download.title[:30] + "..." if len(download.title) > 30 else download.title,
                 progress_text,
                 speed_text,
                 eta_text,
+                size_text,
                 download.status
             )
         
         return table
+    
+    def create_detailed_progress_display(self, download_id: str) -> Panel:
+        """Create a detailed progress display for a single download."""
+        download = self.downloads.get(download_id)
+        if not download:
+            return Panel("Download not found", title="Progress", border_style="red")
+        
+        # Progress bar
+        progress_bar = "█" * int(download.progress / 5) + "░" * (20 - int(download.progress / 5))
+        
+        # Speed and ETA
+        speed_text = f"{download.speed_mbps:.2f} MB/s" if download.speed > 0 else "Calculating..."
+        eta_text = str(timedelta(seconds=int(download.eta))) if download.eta else "Calculating..."
+        
+        # Size information
+        if download.size > 0:
+            size_text = f"{download.downloaded_mb:.1f} MB / {download.size_mb:.1f} MB"
+            percentage = (download.downloaded / download.size) * 100
+        else:
+            size_text = "Size: Unknown"
+            percentage = download.progress
+        
+        # Duration
+        duration_text = str(download.duration) if download.duration else "00:00:00"
+        
+        content = f"""
+        [bold]{download.title}[/bold]
+        
+        Progress: {progress_bar} {percentage:.1f}%
+        Speed: {speed_text}    ETA: {eta_text}
+        Size: {size_text}
+        Duration: {duration_text}
+        Status: {download.status.title()}
+        
+        [dim]Press Ctrl+C to cancel[/dim]
+        """
+        
+        return Panel(content, title="Download Progress", border_style="blue")
+    
+    def create_enhanced_summary(self) -> Panel:
+        """Create an enhanced summary with detailed statistics."""
+        total_downloads = len(self.downloads)
+        completed = len([d for d in self.downloads.values() if d.status == "completed"])
+        failed = len([d for d in self.downloads.values() if d.status == "failed"])
+        downloading = len([d for d in self.downloads.values() if d.status == "downloading"])
+        
+        total_size = sum(d.size_mb for d in self.downloads.values() if d.size > 0)
+        downloaded_size = sum(d.downloaded_mb for d in self.downloads.values() if d.downloaded > 0)
+        
+        # Calculate average speed
+        active_downloads = [d for d in self.downloads.values() if d.speed > 0]
+        avg_speed = sum(d.speed_mbps for d in active_downloads) / len(active_downloads) if active_downloads else 0
+        
+        # Calculate success rate
+        success_rate = (completed / total_downloads * 100) if total_downloads > 0 else 0
+        
+        summary_text = f"""
+        [bold]Download Summary[/bold]
+        
+        Total Downloads: {total_downloads}
+        Status: {completed} completed | {failed} failed | {downloading} downloading
+        Success Rate: {success_rate:.1f}%
+        
+        Size: {downloaded_size:.1f} MB / {total_size:.1f} MB downloaded
+        Average Speed: {avg_speed:.2f} MB/s
+        
+        [dim]Press 'q' to quit, 'p' to pause, 's' to skip current[/dim]
+        """
+        
+        return Panel(summary_text, title="Enhanced Summary", border_style="green")
     
     def create_summary_panel(self) -> Panel:
         """Create a summary panel of all downloads."""
