@@ -7,28 +7,30 @@ for the VideoMilker CLI application.
 
 Usage:
     python setup_project.py [--force] [--dry-run]
-    
+
 Options:
     --force     Overwrite existing files
     --dry-run   Show what would be created without actually creating files
 """
 
-import os
-import sys
-import json
 import argparse
-from pathlib import Path
+import sys
 from datetime import datetime
-from typing import Dict, List, Optional, Tuple, Callable
+from pathlib import Path
+from typing import Callable
+from typing import Dict
+from typing import Tuple
+
+from rich.align import Align
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
-from rich.align import Align
+
 
 class ProjectSetup:
     """Handles the creation of project directory structure and initial files."""
-    
+
     def __init__(self, root_path: Path, force: bool = False, dry_run: bool = False):
         self.root_path = Path(root_path).resolve()
         self.force = force
@@ -36,57 +38,50 @@ class ProjectSetup:
         self.created_files = []
         self.created_dirs = []
         self.console = Console()
-        
+
     def create_directory_structure(self) -> None:
         """Create the complete directory structure."""
-        
+
         directories = [
             # Main source directories
             "src/videomilker/cli",
-            "src/videomilker/core", 
+            "src/videomilker/core",
             "src/videomilker/config",
             "src/videomilker/history",
             "src/videomilker/utils",
             "src/videomilker/exceptions",
-            
             # Test directories
             "tests/test_cli",
             "tests/test_core",
-            "tests/test_config", 
+            "tests/test_config",
             "tests/test_utils",
-            
             # Documentation
             "docs",
-            
             # Configuration
             "config/themes",
             "config/templates",
-            
             # Data directories
             "data/downloads",
             "data/history",
             "data/logs",
             "data/temp",
-            
             # Utility scripts
             "scripts",
-            
             # Assets
             "assets/icons",
             "assets/templates",
-            
             # Build directories
             "build/dist",
             "build/exe",
-            "build/temp"
+            "build/temp",
         ]
-        
+
         for directory in directories:
             self._create_directory(directory)
-    
+
     def create_initial_files(self) -> None:
         """Create initial project files with basic content."""
-        
+
         # Root level files
         self._create_file(".gitignore", self._get_gitignore_content())
         self._create_file("README.md", self._get_readme_content())
@@ -94,7 +89,7 @@ class ProjectSetup:
         self._create_file("setup.py", self._get_setup_py_content())
         self._create_file("pyproject.toml", self._get_pyproject_content())
         self._create_file("LICENSE", self._get_license_content())
-        
+
         # Python __init__.py files
         init_files = [
             "src/__init__.py",
@@ -109,83 +104,83 @@ class ProjectSetup:
             "tests/test_cli/__init__.py",
             "tests/test_core/__init__.py",
             "tests/test_config/__init__.py",
-            "tests/test_utils/__init__.py"
+            "tests/test_utils/__init__.py",
         ]
-        
+
         for init_file in init_files:
             self._create_file(init_file, self._get_init_content(init_file))
-        
+
         # Main application files
         self._create_file("src/videomilker/main.py", self._get_main_py_content())
         self._create_file("src/videomilker/version.py", self._get_version_content())
-        
+
         # CLI module files
         self._create_file("src/videomilker/cli/menu_system.py", self._get_menu_system_content())
         self._create_file("src/videomilker/cli/menu_renderer.py", self._get_menu_renderer_content())
         self._create_file("src/videomilker/cli/styles.py", self._get_styles_content())
-        
+
         # Core module files
         self._create_file("src/videomilker/core/downloader.py", self._get_downloader_content())
         self._create_file("src/videomilker/core/file_manager.py", self._get_file_manager_content())
-        
+
         # Configuration files
         self._create_file("src/videomilker/config/settings.py", self._get_settings_content())
         self._create_file("config/default_config.json", self._get_default_config_content())
-        
+
         # Test configuration
         self._create_file("tests/conftest.py", self._get_conftest_content())
-        
+
         # Documentation files
         self._create_file("docs/README.md", self._get_docs_readme_content())
         self._create_file("docs/installation.md", self._get_installation_content())
-        
+
         # Data placeholder files
         self._create_file("data/downloads/.gitkeep", "")
         self._create_file("data/history/.gitkeep", "")
         self._create_file("data/logs/.gitkeep", "")
         self._create_file("data/temp/.gitkeep", "")
-    
+
     def _create_directory(self, path: str) -> None:
         """Create a directory if it doesn't exist."""
         full_path = self.root_path / path
-        
+
         if self.dry_run:
             print(f"[DRY RUN] Would create directory: {full_path}")
             return
-            
+
         if not full_path.exists():
             full_path.mkdir(parents=True, exist_ok=True)
             self.created_dirs.append(str(full_path))
             print(f" Created directory: {path}")
         else:
             print(f"• Directory exists: {path}")
-    
+
     def _create_file(self, path: str, content: str) -> None:
         """Create a file with the given content."""
         full_path = self.root_path / path
-        
+
         if self.dry_run:
             print(f"[DRY RUN] Would create file: {full_path}")
             return
-            
+
         if full_path.exists() and not self.force:
             print(f"• File exists (skipping): {path}")
             return
-            
+
         # Ensure parent directory exists
         full_path.parent.mkdir(parents=True, exist_ok=True)
-        
+
         try:
-            with open(full_path, 'w', encoding='utf-8') as f:
+            with open(full_path, "w", encoding="utf-8") as f:
                 f.write(content)
             self.created_files.append(str(full_path))
             print(f" Created file: {path}")
         except Exception as e:
             print(f" Failed to create {path}: {e}")
-    
+
     # Content generation methods
     def _get_gitignore_content(self) -> str:
-        return '''# Byte-compiled / optimized / DLL files
+        return """# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
@@ -265,10 +260,10 @@ data/temp/*
 config/user_config.json
 *.db
 *.sqlite
-'''
+"""
 
     def _get_readme_content(self) -> str:
-        return '''# VideoMilker
+        return """# VideoMilker
 
 An intuitive CLI interface for yt-dlp that simplifies video downloading with organized workflows.
 
@@ -294,10 +289,10 @@ See the `docs/` directory for detailed documentation.
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-'''
+"""
 
     def _get_requirements_content(self) -> str:
-        return '''# Core dependencies
+        return """# Core dependencies
 rich>=13.0.0
 click>=8.0.0
 yt-dlp>=2023.12.30
@@ -326,7 +321,7 @@ setuptools>=65.0.0
 wheel>=0.38.0
 build>=0.10.0
 twine>=4.0.0
-'''
+"""
 
     def _get_setup_py_content(self) -> str:
         return '''#!/usr/bin/env python3
@@ -396,7 +391,7 @@ setup(
 '''
 
     def _get_pyproject_content(self) -> str:
-        return '''[build-system]
+        return """[build-system]
 requires = ["setuptools>=65.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
@@ -470,11 +465,11 @@ python_version = "3.8"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
-'''
+"""
 
     def _get_license_content(self) -> str:
         year = datetime.now().year
-        return f'''MIT License
+        return f"""MIT License
 
 Copyright (c) {year} VideoMilker Team
 
@@ -495,7 +490,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-'''
+"""
 
     def _get_init_content(self, file_path: str) -> str:
         """Generate appropriate __init__.py content based on the module."""
@@ -722,7 +717,7 @@ class MenuRenderer:
 
     def _get_default_config_content(self) -> str:
         home = str(Path.home())
-        return f'''{{
+        return f"""{{
   "version": "1.0.0",
   "download": {{
     "path": "{home}/Downloads/VideoMilker",
@@ -745,7 +740,7 @@ class MenuRenderer:
     "auto_cleanup": true,
     "cleanup_days": 30
   }}
-}}'''
+}}"""
 
     def _get_conftest_content(self) -> str:
         return '''"""Pytest configuration and fixtures."""
@@ -807,7 +802,7 @@ def mock_ytdlp_failure(monkeypatch):
 '''
 
     def _get_docs_readme_content(self) -> str:
-        return '''# VideoMilker Documentation
+        return """# VideoMilker Documentation
 
 Welcome to the VideoMilker documentation. This directory contains comprehensive guides and references for using and developing VideoMilker.
 
@@ -844,10 +839,10 @@ If you need help or have questions:
 ## Contributing
 
 We welcome contributions! Please read our [Contributing Guide](contributing.md) to get started.
-'''
+"""
 
     def _get_installation_content(self) -> str:
-        return '''# Installation Guide
+        return """# Installation Guide
 
 This guide covers how to install and set up VideoMilker on your system.
 
@@ -962,30 +957,30 @@ If you encounter issues:
 - Read the [User Guide](user_guide.md) for detailed usage instructions
 - Customize your [Configuration](user_guide.md#configuration)
 - Explore [Advanced Features](user_guide.md#advanced-features)
-'''
+"""
 
     def run_setup(self) -> None:
         """Run the complete project setup."""
         print(" Setting up VideoMilker project structure...")
         print(f"Root directory: {self.root_path}")
         print()
-        
+
         try:
             # Create directory structure
             print(" Creating directory structure...")
             self.create_directory_structure()
             print()
-            
+
             # Create files
             print(" Creating initial files...")
             self.create_initial_files()
             print()
-            
+
             # Summary
             print(" Project setup completed successfully!")
             print(f"Created {len(self.created_dirs)} directories")
             print(f"Created {len(self.created_files)} files")
-            
+
             if not self.dry_run:
                 print()
                 print(" Next Steps:")
@@ -998,7 +993,7 @@ If you encounter issues:
                 print("   pip install -r requirements.txt")
                 print("4. Run the application:")
                 print("   python -m src.videomilker.main")
-                
+
         except Exception as e:
             print(f" Setup failed: {e}")
             if self.dry_run:
@@ -1009,60 +1004,51 @@ If you encounter issues:
         """Clean up files older than specified days."""
         cutoff_date = datetime.now().timestamp() - (days_to_keep * 24 * 3600)
         cleaned_count = 0
-        
+
         for day_folder in self.base_path.iterdir():
             if not day_folder.is_dir():
                 continue
-                
-            for file_path in day_folder.rglob('*'):
+
+            for file_path in day_folder.rglob("*"):
                 if file_path.is_file():
                     try:
                         if file_path.stat().st_mtime < cutoff_date:
                             file_path.unlink()
                             cleaned_count += 1
-                    except (OSError, FileNotFoundError):
+                    except OSError:
                         continue
-            
+
             # Remove empty directories
             try:
                 if not any(day_folder.iterdir()):
                     day_folder.rmdir()
             except OSError:
                 continue
-        
+
         return cleaned_count
 
     def show_welcome_banner(self) -> None:
         """Display the welcome banner."""
         banner_text = Text("Welcome to VideoMilker!", style="bold blue")
-        banner = Panel(
-            Align.center(banner_text),
-            style="blue",
-            padding=(1, 2)
-        )
+        banner = Panel(Align.center(banner_text), style="blue", padding=(1, 2))
         self.console.print(banner)
         self.console.print()
-    
+
     def show_menu(self, title: str, options: Dict[str, Tuple[str, Callable]]) -> str:
         """Display a menu and get user input."""
         # Create menu table
         table = Table(show_header=False, box=None, padding=(0, 2))
         table.add_column("Option", style="cyan", width=4)
         table.add_column("Description", style="white")
-        
+
         for key, (description, _) in options.items():
             table.add_row(f"[{key}]", description)
-        
+
         # Display menu in panel
-        menu_panel = Panel(
-            table,
-            title=title,
-            title_align="center",
-            style="blue"
-        )
-        
+        menu_panel = Panel(table, title=title, title_align="center", style="blue")
+
         self.console.print(menu_panel)
-        
+
         # Get user input
         while True:
             try:
@@ -1366,35 +1352,22 @@ def main():
     """Main function to run the setup script."""
     parser = argparse.ArgumentParser(
         description="VideoMilker Project Setup Script",
-        epilog="This script creates the complete directory structure and initial files for VideoMilker."
+        epilog="This script creates the complete directory structure and initial files for VideoMilker.",
     )
-    
+
     parser.add_argument(
-        "path", 
-        nargs="?", 
-        default=".", 
-        help="Root directory for the project (default: current directory)"
+        "path", nargs="?", default=".", help="Root directory for the project (default: current directory)"
     )
+    parser.add_argument("--force", action="store_true", help="Overwrite existing files")
     parser.add_argument(
-        "--force", 
-        action="store_true", 
-        help="Overwrite existing files"
+        "--dry-run", action="store_true", help="Show what would be created without actually creating files"
     )
-    parser.add_argument(
-        "--dry-run", 
-        action="store_true", 
-        help="Show what would be created without actually creating files"
-    )
-    
+
     args = parser.parse_args()
-    
+
     # Create and run setup
-    setup = ProjectSetup(
-        root_path=args.path,
-        force=args.force,
-        dry_run=args.dry_run
-    )
-    
+    setup = ProjectSetup(root_path=args.path, force=args.force, dry_run=args.dry_run)
+
     setup.run_setup()
 
 
