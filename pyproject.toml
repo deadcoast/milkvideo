@@ -7,7 +7,7 @@ name = "videomilker"
 dynamic = ["version"]
 description = "An intuitive, tree-structured CLI interface for yt-dlp with visual feedback"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.11"
 keywords = [
     "video",
     "download",
@@ -17,7 +17,7 @@ keywords = [
     "rich",
     "terminal-ui",
     "batch-download",
-    "media-downloader"
+    "media-downloader",
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -26,9 +26,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Topic :: Multimedia :: Video",
@@ -37,7 +35,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Utilities",
     "Environment :: Console",
-    "Framework :: Click"
+    "Framework :: Click",
 ]
 dependencies = [
     "rich>=13.0.0",
@@ -58,7 +56,7 @@ dependencies = [
     "xattr>=0.10.1; sys_platform != 'win32'",
     "pycryptodomex>=3.19.0",
     "secretstorage>=3.3.3; sys_platform != 'win32'",
-    "pathlib2>=2.3.7"
+    "pathlib2>=2.3.7",
 ]
 
 [project.license]
@@ -118,13 +116,9 @@ test = [
     "pytest>=8.0.0",
     "pytest-cov>=4.1.0",
     "pytest-mock>=3.10.0",
-    "pytest-asyncio>=0.21.0"
+    "pytest-asyncio>=0.21.0",
 ]
-docs = [
-    "sphinx>=6.0.0",
-    "sphinx-rtd-theme>=1.2.0",
-    "myst-parser>=1.0.0"
-]
+docs = ["sphinx>=6.0.0", "sphinx-rtd-theme>=1.2.0", "myst-parser>=1.0.0"]
 all = [
     # Convenience meta-extra: union of dev, test, docs
     "pytest>=8.0.0",
@@ -161,8 +155,8 @@ all = [
 Homepage = "https://github.com/videomilker/videomilker"
 Documentation = "https://videomilker.readthedocs.io/"
 Repository = "https://github.com/videomilker/videomilker.git"
-    "Bug Tracker" = "https://github.com/videomilker/videomilker/issues"
-    "Source Code" = "https://github.com/videomilker/videomilker"
+"Bug Tracker" = "https://github.com/videomilker/videomilker/issues"
+"Source Code" = "https://github.com/videomilker/videomilker"
 Changelog = "https://github.com/videomilker/videomilker/blob/main/CHANGELOG.md"
 
 [project.scripts]
@@ -185,10 +179,10 @@ exclude = ["tests*", "docs*"]
 videomilker = ["py.typed"]
 
 [tool.setuptools.exclude-package-data]
-"*" = [ "*.pyc", "*.pyo", "*.pyd", "__pycache__", "*.so" ]
+"*" = ["*.pyc", "*.pyo", "*.pyd", "__pycache__", "*.so"]
 
 [tool.black]
-target-version = ["py310"]
+target-version = ["py311"]
 line-length = 120
 skip-string-normalization = true
 skip-magic-trailing-comma = true
@@ -200,14 +194,8 @@ force-exclude = """
 """
 
 [tool.isort]
-py_version = 310
-sections = [
-    "FUTURE",
-    "STDLIB",
-    "THIRDPARTY",
-    "FIRSTPARTY",
-    "LOCALFOLDER"
-]
+py_version = 311
+sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
 default_section = "THIRDPARTY"
 known_third_party = []
 known_first_party = []
@@ -237,16 +225,16 @@ addopts = [
     "--cov=src/videomilker",
     "--cov-report=term-missing",
     "--cov-report=html",
-    "--cov-report=xml"
+    "--cov-report=xml",
 ]
 markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
     "integration: marks tests as integration tests",
-    "unit: marks tests as unit tests"
+    "unit: marks tests as unit tests",
 ]
 
 [tool.mypy]
-python_version = "3.10"
+python_version = "3.11"
 ignore_missing_imports = true
 follow_imports = "silent"
 no_implicit_optional = false
@@ -286,7 +274,7 @@ omit = [
     "*/__pycache__/*",
     "*/migrations/*",
     "*/venv/*",
-    "*/.venv/*"
+    "*/.venv/*",
 ]
 
 [tool.coverage.report]
@@ -300,7 +288,7 @@ exclude_lines = [
     "if 0:",
     "if __name__ == .__main__.:",
     "class .*\\bProtocol\\):",
-    "@(abc\\.)?abstractmethod"
+    "@(abc\\.)?abstractmethod",
 ]
 
 [tool.pre-commit.ci]
@@ -318,7 +306,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
     "sphinx.ext.intersphinx",
-    "myst_parser"
+    "myst_parser",
 ]
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
@@ -337,13 +325,13 @@ extend-select = ["W", "C90", "I", "N", "B", "A", "C4", "PERF", "RUF"]
 ignore = []
 fixable = ["ALL"]
 unfixable = []
-    preview = true
+preview = true
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
 [tool.ruff.lint.isort]
-      force-single-line = true
-      force-sort-within-sections = false
-      lines-after-imports = 2
+force-single-line = true
+force-sort-within-sections = false
+lines-after-imports = 2
 known-first-party = []
 known-local-folder = []
 known-third-party = []
@@ -352,35 +340,35 @@ section-order = [
     "standard-library",
     "third-party",
     "first-party",
-    "local-folder"
+    "local-folder",
 ]
 
 [tool.ruff.lint.mccabe]
-      max-complexity = 24
+max-complexity = 24
 
 [tool.ruff.lint.pycodestyle]
-      ignore-overlong-task-comments = true
+ignore-overlong-task-comments = true
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
 
 [tool.ruff.lint.flake8-annotations]
-      allow-star-arg-any = true
-      ignore-fully-untyped = true
+allow-star-arg-any = true
+ignore-fully-untyped = true
 
 [tool.ruff.lint.pylint]
-      max-args = 5
-      max-branches = 12
-      max-locals = 15
-      max-statements = 50
+max-args = 5
+max-branches = 12
+max-locals = 15
+max-statements = 50
 
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
-    skip-magic-trailing-comma = false
+skip-magic-trailing-comma = false
 line-ending = "auto"
-    preview = false
-    docstring-code-format = true
+preview = false
+docstring-code-format = true
 
 [tool.bandit]
 exclude_dirs = ["tests", "test_*"]
