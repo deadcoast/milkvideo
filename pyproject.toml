@@ -55,9 +55,9 @@ dependencies = [
     "ffmpeg",
     "curl_cffi>=0.5.0",
     "mutagen>=1.47.0",
-    "xattr>=0.10.1",
+    "xattr>=0.10.1; sys_platform != 'win32'",
     "pycryptodomex>=3.19.0",
-    "secretstorage>=3.3.3",
+    "secretstorage>=3.3.3; sys_platform != 'win32'",
     "pathlib2>=2.3.7"
 ]
 
@@ -74,16 +74,48 @@ email = "team@videomilker.com"
 
 [project.optional-dependencies]
 dev = [
-    "pytest>=7.4.0",
+    # Testing
+    "pytest>=8.0.0",
     "pytest-cov>=4.1.0",
-    "black>=23.0.0",
+    "pytest-benchmark>=4.0.0",
+    "pytest-mock>=3.10.0",
+    "pytest-asyncio>=0.21.0",
+
+    # Linting/formatting
+    "ruff>=0.2.1",
+    "black>=24.2.0",
+    "isort>=5.13.2",
     "flake8>=6.0.0",
-    "isort>=5.12.0",
-    "mypy>=1.0.0",
-    "pre-commit>=3.0.0"
+
+    # Type checking
+    "mypy>=1.8.0",
+    "mypy-extensions>=1.0.0",
+    "pyright>=1.1.350",
+
+    # Tooling
+    "pre-commit>=3.6.1",
+    "tox>=4.12.1",
+    "codecov>=2.1.13",
+    "build>=1.0.3",
+    "twine>=5.0.0",
+    "setuptools>=69.1.0",
+
+    # Docs
+    "sphinx>=6.0.0",
+    "sphinx-rtd-theme>=1.2.0",
+    "myst-parser>=1.0.0",
+    "mkdocs>=1.5.3",
+    "mkdocstrings>=0.24.0",
+    "mkdocs-material>=9.5.9",
+    "mkdocstrings-python>=1.8.0",
+    "Pygments>=2.17.2",
+
+    # Jupyter
+    "ipython>=8.21.0",
+    "ipykernel>=6.29.2",
 ]
 test = [
-    "pytest>=7.4.0",
+    "pytest>=8.0.0",
     "pytest-cov>=4.1.0",
     "pytest-mock>=3.10.0",
     "pytest-asyncio>=0.21.0"
@@ -93,7 +125,37 @@ docs = [
     "sphinx-rtd-theme>=1.2.0",
     "myst-parser>=1.0.0"
 ]
-all = ["videomilker[dev,test,docs]"]
+all = [
+    # Convenience meta-extra: union of dev, test, docs
+    "pytest>=8.0.0",
+    "pytest-cov>=4.1.0",
+    "pytest-benchmark>=4.0.0",
+    "pytest-mock>=3.10.0",
+    "pytest-asyncio>=0.21.0",
+    "ruff>=0.2.1",
+    "black>=24.2.0",
+    "isort>=5.13.2",
+    "flake8>=6.0.0",
+    "mypy>=1.8.0",
+    "mypy-extensions>=1.0.0",
+    "pyright>=1.1.350",
+    "pre-commit>=3.6.1",
+    "tox>=4.12.1",
+    "codecov>=2.1.13",
+    "build>=1.0.3",
+    "twine>=5.0.0",
+    "setuptools>=69.1.0",
+    "sphinx>=6.0.0",
+    "sphinx-rtd-theme>=1.2.0",
+    "myst-parser>=1.0.0",
+    "mkdocs>=1.5.3",
+    "mkdocstrings>=0.24.0",
+    "mkdocs-material>=9.5.9",
+    "mkdocstrings-python>=1.8.0",
+    "Pygments>=2.17.2",
+    "ipython>=8.21.0",
+    "ipykernel>=6.29.2",
+]
 
 [project.urls]
 Homepage = "https://github.com/videomilker/videomilker"
