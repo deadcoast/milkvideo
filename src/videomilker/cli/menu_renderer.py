@@ -149,7 +149,8 @@ class MenuRenderer:
         while True:
             try:
                 response = self.console.input(prompt).strip().lower()
-            except (EOFError, OSError):
+            # Only catch EOFError, which occurs when input is unavailable (e.g., piped or redirected input)
+            except EOFError:
                 self.console.print(
                     f"[{self.theme['warning_style']}]Input unavailable - defaulting to 'yes'.[/{self.theme['warning_style']}]"
                 )
