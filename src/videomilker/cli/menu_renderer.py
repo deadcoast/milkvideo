@@ -147,6 +147,17 @@ class MenuRenderer:
         prompt = f"[{self.theme['highlight_style']}]{message} [y/n/auto] (y):[/{self.theme['highlight_style']}]"
 
         while True:
+            try:
+                response = self.console.input(prompt).strip().lower()
+            # Only catch EOFError, which occurs when input is unavailable (e.g., piped or redirected input)
+            except EOFError:
+                self.console.print(
+                    f"[{self.theme['warning_style']}]Input unavailable - defaulting to 'yes'.[/{self.theme['warning_style']}]"
+                )
+                return True
+            
+            if response in ['y', 'yes', '']:
+                self.console.print(f"[{self.theme['success_style']}][ON] - Auto Start Downloads[/{self.theme['success_style']}]")
             response = self.console.input(prompt).strip().lower()
 
             if response in ["y", "yes", ""]:
