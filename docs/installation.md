@@ -115,6 +115,6 @@ If you encounter issues:
 
 ## Next Steps
 
-- Read the [User Guide](user_guide.md) for detailed usage instructions
-- Customize your [Configuration](user_guide.md#configuration)
-- Explore [Advanced Features](user_guide.md#advanced-features)
+- Read the [User Guide](user-guide.md) for detailed usage instructions
+- Customize your [Configuration](user-guide.md#configuration)
+- Explore [Advanced Features](user-guide.md#advanced-features)
