@@ -94,10 +94,6 @@ milkvideo/                              # Root project directory
  scripts/                           # Utility scripts
     setup_project.py               # Project setup and initialization script
 
- assets/                            # Static assets
-    icons/                         # Application icons
-    templates/                     # Asset templates
-
  htmlcov/                           # Test coverage reports
  .coverage                          # Coverage data
  coverage.xml                       # Coverage report in XML format
