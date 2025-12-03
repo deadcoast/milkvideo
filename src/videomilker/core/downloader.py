@@ -66,6 +66,24 @@ class VideoDownloader:
     def download_single(self, url: str, options: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """Download a single video."""
         try:
+            # Initialize current download tracking
+            self.current_download = {
+                "id": f"download_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}",
+                "url": url,
+                "options": options or {},
+                "status": "downloading",
+                "progress": 0.0,
+                "speed": 0,
+                "eta": None,
+                "size": 0,
+                "downloaded": 0,
+                "filename": "",
+                "error": None,
+                "start_time": datetime.now(),
+                "end_time": None,
+            }
+            self.progress_tracker.add_download(self.current_download["id"], url)
+
             # Prepare download options
             yt_dlp_options = self._prepare_yt_dlp_options(options)
 
@@ -155,10 +173,13 @@ class VideoDownloader:
         if d["status"] == "downloading":
             # Update progress information
             if d.get("total_bytes"):
-                progress = (d["downloaded_bytes"] / d["total_bytes"]) * 100
+                total_bytes = d["total_bytes"]
+                progress = (d["downloaded_bytes"] / total_bytes) * 100
             elif d.get("total_bytes_estimate"):
-                progress = (d["downloaded_bytes"] / d["total_bytes_estimate"]) * 100
+                total_bytes = d["total_bytes_estimate"]
+                progress = (d["downloaded_bytes"] / total_bytes) * 100
             else:
+                total_bytes = 0
                 progress = 0.0
 
             # Update current download info
@@ -168,18 +189,28 @@ class VideoDownloader:
                         "progress": progress,
                         "speed": d.get("speed", 0),
                         "eta": d.get("eta"),
-                        "size": d.get("total_bytes", 0),
+                        "size": total_bytes,
+                        "downloaded": d.get("downloaded_bytes", 0),
                         "filename": d.get("filename", ""),
                     }
                 )
 
             # Update progress tracker
-            self.progress_tracker.update_progress(progress, d.get("speed", 0), d.get("eta"))
+            if self.current_download:
+                self.progress_tracker.update_progress(
+                    self.current_download["id"],
+                    progress,
+                    d.get("speed", 0),
+                    d.get("eta"),
+                    total_bytes,
+                    d.get("downloaded_bytes", 0),
+                )
 
         elif d["status"] == "finished":
             # Download completed
             if self.current_download:
                 self.current_download.update({"status": "completed", "progress": 100.0, "end_time": datetime.now()})
+                self.progress_tracker.complete_download(self.current_download["id"], success=True)
 
     def _get_downloaded_filename(self, info: Dict[str, Any], options: Dict[str, Any]) -> str:
         """Get the filename of the downloaded file."""
