@@ -53,6 +53,7 @@ videomilker
 ```
 
 On first run, VideoMilker will:
+
 1. Create configuration directories
 2. Set up default download locations
 3. Show the main menu
@@ -89,27 +90,31 @@ VideoMilker automatically installs:
 
 ### Common Issues
 
-**"Command not found: videomilker"**
+- **"Command not found: videomilker"**
+
 - Ensure pip installation completed successfully
 - Check that Python scripts directory is in your PATH
 
-**"Permission denied" errors**
+- **"Permission denied" errors**
+
 - On macOS/Linux, you may need to run: `chmod +x ~/.local/bin/videomilker`
 - Or install with: `pip install --user videomilker`
 
-**yt-dlp not found**
+- **yt-dlp not found**
+
 - VideoMilker will attempt to use the system yt-dlp installation
 - If not found, it will use the bundled version
 
 ### Getting Help
 
 If you encounter issues:
+
 1. Run with verbose mode: `videomilker --verbose`
 2. Check the logs in `~/.videomilker/logs/`
 3. Report issues on GitHub with log output
 
 ## Next Steps
 
-- Read the [User Guide](user_guide.md) for detailed usage instructions
-- Customize your [Configuration](user_guide.md#configuration)
-- Explore [Advanced Features](user_guide.md#advanced-features)
+- Read the [User Guide](user-guide.md) for detailed usage instructions
+- Customize your [Configuration](user-guide.md#configuration)
+- Explore [Advanced Features](user-guide.md#advanced-features)

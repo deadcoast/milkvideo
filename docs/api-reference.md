@@ -57,11 +57,23 @@ videomilker --download-path /custom/path
 
 - `__init__(settings, verbose=False)`: Initialize menu system
 - `run()`: Start the main menu loop
-- `show_main_menu()`: Display main menu
-- `handle_quick_download()`: Handle single URL downloads
-- `handle_batch_download()`: Handle batch downloads
-- `show_settings_menu()`: Display settings menu
-- `show_history_menu()`: Display download history
+- `show_main_menu()`: Display main menu with keyboard shortcuts
+- `handle_quick_download()`: Handle single URL downloads with format selection
+- `handle_batch_download()`: Handle batch downloads with concurrency
+- `handle_queue_management()`: Manage download queues with pause/resume
+- `handle_audio_download()`: Handle audio-only downloads
+- `handle_chapter_download()`: Handle chapter splitting downloads
+- `show_settings_menu()`: Display settings menu with new options
+- `show_history_menu()`: Display download history with advanced search
+- `handle_file_management()`: Manage files and duplicates
+- `show_download_confirmation()`: Show confirmation with auto-download option
+- `_handle_global_shortcuts()`: Process global keyboard shortcuts
+- `_show_format_selection()`: Display format preview and selection
+- `_handle_configuration_wizard()`: Run first-time setup wizard
+- `_handle_advanced_search()`: Advanced history search functionality
+- `_handle_performance_settings()`: Configure concurrent download limits
+- `_export_configuration()`: Export settings to file
+- `_import_configuration()`: Import settings from file
 
 **Usage**:
 
@@ -83,12 +95,18 @@ menu_system.run()
 
 **Key Methods**:
 
-- `render_main_menu()`: Render main menu interface
+- `render_main_menu()`: Render main menu interface with shortcuts
 - `render_quick_download_menu()`: Render quick download interface
 - `render_batch_download_menu()`: Render batch download interface
-- `render_settings_menu()`: Render settings interface
-- `render_progress_display()`: Render download progress
-- `render_error_display()`: Render error messages
+- `render_settings_menu()`: Render settings interface with new options
+- `render_progress_display()`: Render download progress with detailed stats
+- `render_error_display()`: Render user-friendly error messages
+- `show_download_confirmation()`: Show confirmation dialog with auto option
+- `show_progress()`: Display enhanced progress with speed and ETA
+- `show_download_progress()`: Show detailed download progress
+- `show_error()`: Display formatted error messages with suggestions
+- `show_warning()`: Display confirmation dialogs for destructive actions
+- `show_menu()`: Display menu with keyboard shortcut information
 
 **Usage**:
 
@@ -159,13 +177,20 @@ console = Console(theme=Theme(DEFAULT_THEME))
 **Key Methods**:
 
 - `__init__(settings, console=None)`: Initialize downloader
-- `download_single(url, options=None)`: Download single video
+- `download_single(url, options=None)`: Download single video with resume support
 - `download_batch(urls, options=None)`: Download multiple videos
 - `add_to_queue(url, options=None)`: Add URL to download queue
 - `get_queue_status()`: Get current queue status
 - `validate_url(url)`: Validate URL format
 - `get_video_info(url)`: Get video information without downloading
 - `list_formats(url)`: List available formats
+- `get_formatted_formats(url)`: Get detailed format information with preview
+- `get_best_formats(url, format_type='video')`: Get best available formats
+- `get_chapters(url)`: Get chapter information for videos
+- `download_with_chapters(url, options=None)`: Download with chapter splitting
+- `find_interrupted_downloads(download_path)`: Find incomplete downloads
+- `resume_download(url, partial_file, options=None)`: Resume interrupted download
+- `cleanup_partial_files(download_path)`: Clean up incomplete download files
 
 **Usage**:
 
@@ -197,6 +222,22 @@ results = downloader.download_batch(urls)
 
 ### `src/videomilker/core/batch_processor.py`
 
+#### `DownloadQueue`
+
+**Class**: Thread-safe download queue management
+
+**Key Methods**:
+
+- `__init__()`: Initialize empty queue
+- `add_url(url, options=None)`: Add URL to queue
+- `get_next()`: Get next URL from queue
+- `pause()`: Pause queue processing
+- `resume()`: Resume queue processing
+- `stop()`: Stop all processing
+- `clear()`: Clear all items from queue
+- `get_status()`: Get current queue status
+- `get_progress()`: Get processing progress
+
 #### `BatchProcessor`
 
 **Class**: Batch download logic and queue management
@@ -204,12 +245,16 @@ results = downloader.download_batch(urls)
 **Key Methods**:
 
 - `__init__(settings, console=None)`: Initialize batch processor
-- `process_batch(urls, options=None)`: Process batch of URLs
+- `process_batch(urls, options=None)`: Process batch of URLs with chunking
+- `process_batch_with_limits(urls, options=None, max_concurrent=3)`: Process with concurrency
+- `process_audio_batch(urls, options=None)`: Process audio-only batch
+- `process_audio_batch_with_limits(urls, options=None, max_concurrent=3)`: Audio batch with concurrency
 - `add_to_queue(url, options=None)`: Add to processing queue
 - `get_queue_status()`: Get queue status
 - `clear_queue()`: Clear processing queue
 - `pause_processing()`: Pause batch processing
 - `resume_processing()`: Resume batch processing
+- `estimate_memory_usage(num_urls, avg_size_mb=50)`: Estimate memory requirements
 
 **Usage**:
 
@@ -260,6 +305,16 @@ tracker.update_progress(50.0, speed=1024, eta=30)
 - `cleanup_temp_files()`: Clean up temporary files
 - `get_file_info(filepath)`: Get file information
 - `validate_file(filepath)`: Validate downloaded file
+- `calculate_file_hash(filepath, algorithm='sha256')`: Calculate file hash for duplicate detection
+- `find_duplicates_by_hash(directory)`: Find duplicate files using content hash
+- `find_duplicates_by_name_size(directory)`: Find duplicates by name and size
+- `find_similar_files(directory, similarity_threshold=0.8)`: Find similar files using fuzzy matching
+- `remove_duplicates(duplicates, keep_strategy='newest')`: Remove duplicate files with strategy
+- `get_large_files(directory, size_threshold_mb=100)`: Find files larger than threshold
+- `get_old_files(directory, age_days=30)`: Find files older than specified days
+- `cleanup_empty_folders(directory)`: Remove empty directories
+- `move_files_by_extension(directory, create_folders=True)`: Organize files by type
+- `analyze_storage_usage(directory)`: Analyze disk usage and provide recommendations
 
 **Usage**:
 
@@ -320,13 +375,15 @@ settings.download.file_naming = "%(title)s.%(ext)s"
 **Key Methods**:
 
 - `__init__(config_dir=None)`: Initialize config manager
-- `load_config(config_path=None)`: Load configuration
+- `load_config(config_path=None)`: Load configuration with validation
 - `save_config(config_path=None)`: Save configuration
 - `get_setting(key, default=None)`: Get specific setting
 - `set_setting(key, value)`: Set specific setting
 - `reset_to_defaults()`: Reset to default configuration
-- `export_config(export_path)`: Export configuration
-- `import_config(import_path)`: Import configuration
+- `export_config(export_path)`: Export configuration with metadata
+- `import_config(import_path)`: Import configuration with validation
+- `validate_config(settings)`: Validate configuration settings
+- `auto_fix_config(settings)`: Automatically fix common configuration issues
 
 **Usage**:
 
@@ -412,6 +469,17 @@ recent = history_manager.get_recent_downloads(limit=5)
 - `AuthenticationError`: Authentication errors
 - `RateLimitError`: Rate limiting errors
 
+**Key Functions**:
+
+- `map_yt_dlp_error(error_message)`: Map yt-dlp errors to custom exceptions
+- `create_error_with_context(error, url, additional_info=None)`: Create detailed error with context
+- `get_user_friendly_error_message(error_type, error_message)`: Get user-friendly error descriptions
+- `format_error_for_display(error, show_suggestions=True)`: Format errors for UI display
+
+**Error Mapping**:
+
+- `USER_FRIENDLY_ERRORS`: Dictionary mapping error types to user-friendly messages and suggestions
+
 **Usage**:
 
 ```python
@@ -434,7 +502,9 @@ except NetworkError as e:
 **Key Exception Classes**:
 
 - `ConfigError`: Base configuration error
-- `ConfigFileError`: Configuration file errors
+- `ConfigFileError`: Base class for configuration file errors
+- `ConfigFileNotFoundError`: Configuration file not found
+- `ConfigFileCorruptedError`: Configuration file corrupted
 - `ConfigValidationError`: Configuration validation errors
 - `ConfigMigrationError`: Configuration migration errors
 
@@ -472,7 +542,7 @@ except NetworkError as e:
 ```python
 from src.remove_emojis import remove_emojis
 
-clean_title = remove_emojis("Video Title 🎵🎬")
+clean_title = remove_emojis("Video Title ")
 # Result: "Video Title "
 ```
 
@@ -509,7 +579,10 @@ clean_title = remove_emojis("Video Title 🎵🎬")
     "max_sleep_interval": 10,
     "sleep_interval": 1,
     "sleep_requests": 0.75,
-    "sleep_subtitles": 5
+    "sleep_subtitles": 5,
+    "resume": true,
+    "fragment_retries": 10,
+    "retry_sleep": 1
   },
   "ui": {
     "theme": "default",
@@ -526,7 +599,8 @@ clean_title = remove_emojis("Video Title 🎵🎬")
     "highlight_style": "yellow",
     "error_style": "red",
     "success_style": "green",
-    "warning_style": "yellow"
+    "warning_style": "yellow",
+    "auto_download": false
   },
   "history": {
     "max_entries": 1000,

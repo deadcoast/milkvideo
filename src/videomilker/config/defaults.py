@@ -2,6 +2,7 @@
 
 from pathlib import Path
 
+
 # Default configuration structure
 DEFAULT_CONFIG = {
     "version": "1.0.0",
@@ -26,7 +27,7 @@ DEFAULT_CONFIG = {
         "max_sleep_interval": 10,
         "sleep_interval": 1,
         "sleep_requests": 0.75,
-        "sleep_subtitles": 5
+        "sleep_subtitles": 5,
     },
     "ui": {
         "theme": "default",
@@ -44,7 +45,7 @@ DEFAULT_CONFIG = {
         "error_style": "red",
         "success_style": "green",
         "warning_style": "yellow",
-        "auto_download": False
+        "auto_download": False,
     },
     "history": {
         "max_entries": 1000,
@@ -53,7 +54,7 @@ DEFAULT_CONFIG = {
         "save_download_logs": True,
         "log_level": "INFO",
         "database_path": "history.db",
-        "export_format": "json"
+        "export_format": "json",
     },
     "advanced": {
         "use_cookies": False,
@@ -71,7 +72,17 @@ DEFAULT_CONFIG = {
         "sleep_requests": 0.75,
         "sleep_interval": 1,
         "max_sleep_interval": 10,
-        "sleep_subtitles": 5
+        "sleep_subtitles": 5,
+        "twitter_auth": False,
+        "twitter_cookies_file": "",
+        "youtube_auth": False,
+        "youtube_cookies_file": "",
+        "instagram_auth": False,
+        "instagram_cookies_file": "",
+        "age_verification": False,
+        "age_verification_method": "cookies",
+        "browser_impersonation": "chrome",
+        "user_agent": "",
     },
     "formats": {
         "video_formats": ["mp4", "mkv", "webm", "avi", "mov"],
@@ -81,7 +92,7 @@ DEFAULT_CONFIG = {
         "max_resolution": "1080p",
         "min_resolution": "360p",
         "prefer_free_formats": True,
-        "check_formats": True
+        "check_formats": True,
     },
     "post_processing": {
         "extract_audio": False,
@@ -94,39 +105,29 @@ DEFAULT_CONFIG = {
         "remove_chapters": [],
         "sponsorblock_mark": [],
         "sponsorblock_remove": [],
-        "sponsorblock_chapter_title": "[SponsorBlock]: %(category_names)l"
-    }
+        "sponsorblock_chapter_title": "[SponsorBlock]: %(category_names)l",
+    },
 }
+
 
 # Platform-specific defaults
 def get_platform_defaults():
     """Get platform-specific default settings."""
     import platform
-    
+
     system = platform.system().lower()
-    
+
     if system == "windows":
         return {
             "download": {
                 "path": str(Path.home() / "Downloads" / "VideoMilker"),
                 "restrict_filenames": True,
-                "windows_filenames": True
+                "windows_filenames": True,
             }
         }
-    elif system == "darwin":  # macOS
-        return {
-            "download": {
-                "path": str(Path.home() / "Downloads" / "VideoMilker"),
-                "restrict_filenames": False
-            }
-        }
-    else:  # Linux/Unix
-        return {
-            "download": {
-                "path": str(Path.home() / "Downloads" / "VideoMilker"),
-                "restrict_filenames": False
-            }
-        }
+    else:  # macOS
+        return {"download": {"path": str(Path.home() / "Downloads" / "VideoMilker"), "restrict_filenames": False}}
+
 
 # Theme configurations
 THEMES = {
@@ -137,7 +138,7 @@ THEMES = {
         "success_style": "green",
         "warning_style": "yellow",
         "info_style": "cyan",
-        "menu_style": "rounded"
+        "menu_style": "rounded",
     },
     "dark": {
         "border_style": "bright_blue",
@@ -146,7 +147,7 @@ THEMES = {
         "success_style": "bright_green",
         "warning_style": "bright_yellow",
         "info_style": "bright_cyan",
-        "menu_style": "double"
+        "menu_style": "double",
     },
     "light": {
         "border_style": "black",
@@ -155,7 +156,7 @@ THEMES = {
         "success_style": "green",
         "warning_style": "yellow",
         "info_style": "blue",
-        "menu_style": "single"
+        "menu_style": "single",
     },
     "minimal": {
         "border_style": "dim",
@@ -164,8 +165,8 @@ THEMES = {
         "success_style": "green",
         "warning_style": "yellow",
         "info_style": "dim",
-        "menu_style": "none"
-    }
+        "menu_style": "none",
+    },
 }
 
 # File naming templates
@@ -175,7 +176,7 @@ FILE_NAMING_TEMPLATES = {
     "with_id": "%(title)s [%(id)s].%(ext)s",
     "full_info": "%(upload_date)s_%(uploader)s_%(title)s [%(id)s].%(ext)s",
     "playlist": "%(playlist)s/%(playlist_index)s - %(title)s.%(ext)s",
-    "channel": "%(uploader)s/%(upload_date)s_%(title)s.%(ext)s"
+    "channel": "%(uploader)s/%(upload_date)s_%(title)s.%(ext)s",
 }
 
 # Quality presets
@@ -185,21 +186,12 @@ QUALITY_PRESETS = {
     "720p": "best[height<=720]/best",
     "1080p": "best[height<=1080]/best",
     "audio_only": "bestaudio/best",
-    "video_only": "bestvideo/best"
+    "video_only": "bestvideo/best",
 }
 
 # Format presets
 FORMAT_PRESETS = {
-    "mp4": {
-        "format": "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
-        "merge_format": "mp4"
-    },
-    "mkv": {
-        "format": "bestvideo+bestaudio/best",
-        "merge_format": "mkv"
-    },
-    "webm": {
-        "format": "bestvideo[ext=webm]+bestaudio[ext=webm]/best[ext=webm]/best",
-        "merge_format": "webm"
-    }
-} 
+    "mp4": {"format": "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best", "merge_format": "mp4"},
+    "mkv": {"format": "bestvideo+bestaudio/best", "merge_format": "mkv"},
+    "webm": {"format": "bestvideo[ext=webm]+bestaudio[ext=webm]/best[ext=webm]/best", "merge_format": "webm"},
+}
