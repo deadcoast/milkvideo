@@ -1,156 +1,80 @@
 #!/usr/bin/env python3
-"""
-Simple test script for VideoMilker.
+"""Tests for VideoMilker components."""
 
-This script tests the basic functionality of VideoMilker components.
-"""
-
+import io
 import sys
+from datetime import datetime
 from pathlib import Path
-
-
-# Add src to path
-sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 from rich.console import Console
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+
+from videomilker.cli.input_handler import InputHandler
 from videomilker.cli.menu_renderer import MenuRenderer
 from videomilker.config.config_manager import ConfigManager
-from videomilker.config.settings import Settings
+from videomilker.config.settings import DownloadSettings, Settings
+from videomilker.core.file_manager import FileManager
 
 
-def test_configuration():
-    """Test configuration management."""
-    print("Testing configuration management...")
+def test_configuration(tmp_path):
+    config_dir = tmp_path / "config"
+    config_manager = ConfigManager(config_dir=config_dir)
 
-    try:
-        # Test config manager
-        config_manager = ConfigManager()
-        settings = config_manager.load_config()
+    settings = config_manager.load_config()
 
-        print(" Configuration loaded successfully")
-        print(f"  Download path: {settings.download.path}")
-        print(f"  Default quality: {settings.download.default_quality}")
-        print(f"  Theme: {settings.ui.theme}")
-
-        return True
-    except Exception as e:
-        print(f" Configuration test failed: {e}")
-        return False
+    assert (config_dir / "videomilker.json").exists()
+    assert isinstance(settings, Settings)
+    assert settings.download.path
 
 
-def test_menu_renderer():
-    """Test menu renderer."""
-    print("\nTesting menu renderer...")
+def test_menu_renderer_renders_welcome_banner():
+    console = Console(record=True, file=io.StringIO())
+    renderer = MenuRenderer(console, Settings())
 
-    try:
-        console = Console()
-        settings = Settings()
-        renderer = MenuRenderer(console, settings)
+    renderer.show_welcome_banner()
+    output = console.export_text()
 
-        # Test welcome banner
-        renderer.show_welcome_banner()
-
-        print(" Menu renderer initialized successfully")
-        return True
-    except Exception as e:
-        print(f" Menu renderer test failed: {e}")
-        return False
+    assert "VideoMilker" in output
+    assert renderer.theme
 
 
-def test_settings():
-    """Test settings functionality."""
-    print("\nTesting settings functionality...")
+def test_settings_helpers_use_download_path(tmp_path):
+    settings = Settings(download=DownloadSettings(path=str(tmp_path)))
 
-    try:
-        settings = Settings()
+    download_path = settings.get_download_path()
+    expected_day_folder = f"{datetime.now().day:02d}"
+    options = settings.get_yt_dlp_options()
 
-        # Test download path resolution
-        download_path = settings.get_download_path()
-        print(f" Download path resolved: {download_path}")
-
-        # Test yt-dlp options
-        yt_dlp_options = settings.get_yt_dlp_options()
-        print(f" yt-dlp options generated: {len(yt_dlp_options)} options")
-
-        return True
-    except Exception as e:
-        print(f" Settings test failed: {e}")
-        return False
+    assert download_path.parent == tmp_path
+    assert download_path.name == expected_day_folder
+    assert options["outtmpl"] == settings.download.file_naming
+    assert options["format"] == settings.download.default_quality
 
 
-def test_file_manager():
-    """Test file manager."""
-    print("\nTesting file manager...")
+def test_file_manager_creates_day_folder_and_filename(tmp_path):
+    settings = Settings(download=DownloadSettings(path=str(tmp_path)))
+    file_manager = FileManager(settings)
 
-    try:
-        from videomilker.core.file_manager import FileManager
+    day_folder = file_manager.get_day_folder()
+    filename = file_manager.generate_filename("Test Video", "mp4")
 
-        settings = Settings()
-        file_manager = FileManager(settings)
-
-        # Test day folder creation
-        day_folder = file_manager.get_day_folder()
-        print(f" Day folder: {day_folder}")
-
-        # Test filename generation
-        filename = file_manager.generate_filename("Test Video", "mp4")
-        print(f" Generated filename: {filename}")
-
-        return True
-    except Exception as e:
-        print(f" File manager test failed: {e}")
-        return False
+    assert day_folder.exists()
+    assert day_folder.is_dir()
+    assert day_folder.parent == Path(settings.download.path).expanduser()
+    assert filename.endswith(".mp4")
+    assert "test_video" in filename
 
 
-def test_input_handler():
-    """Test input handler."""
-    print("\nTesting input handler...")
+def test_input_handler_validation_and_suggestions():
+    handler = InputHandler()
 
-    try:
-        from videomilker.cli.input_handler import InputHandler
+    valid_url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    invalid_url = "not-a-url"
+    filename = handler.suggest_filename("Test Video Title", "mp4")
 
-        handler = InputHandler()
+    assert handler.validate_url(valid_url)
+    assert not handler.validate_url(invalid_url)
+    assert filename.endswith(".mp4")
+    assert "Test Video Title" in filename
 
-        # Test URL validation
-        valid_url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-        invalid_url = "not-a-url"
-
-        assert handler.validate_url(valid_url) == True
-        assert handler.validate_url(invalid_url) == False
-        print(" URL validation working")
-
-        # Test filename suggestion
-        filename = handler.suggest_filename("Test Video Title", "mp4")
-        print(f" Suggested filename: {filename}")
-
-        return True
-    except Exception as e:
-        print(f" Input handler test failed: {e}")
-        return False
-
-
-def main():
-    """Run all tests."""
-    print("VideoMilker Test Suite")
-    print("=" * 50)
-
-    tests = [test_configuration, test_settings, test_file_manager, test_input_handler, test_menu_renderer]
-
-    total = len(tests)
-
-    passed = sum(bool(test())
-             for test in tests)
-    print("\n" + "=" * 50)
-    print(f"Test Results: {passed}/{total} tests passed")
-
-    if passed == total:
-        print(" All tests passed! VideoMilker is ready to use.")
-        return 0
-    else:
-        print(" Some tests failed. Please check the implementation.")
-        return 1
-
-
-if __name__ == "__main__":
-    sys.exit(main())
